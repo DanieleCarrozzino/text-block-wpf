@@ -291,7 +291,7 @@ namespace TextEmoji
                         style = CustomTextRunProperties.STYLE.BOTH;
                     }                            
                     return new TextCharacters(Text, textSourceCharacterIndex,
-                                            length + 1 - (textSourceCharacterIndex - index), new CustomTextRunProperties(style));
+                                            length - (textSourceCharacterIndex - index), new CustomTextRunProperties(style));
                 }
 
                 // Improvment potrei eliminare gli elementi

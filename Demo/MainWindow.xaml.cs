@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,11 +23,28 @@ namespace Demo
     public partial class MainWindow : Window
     {
 
-        TextEmojiImage text;
-
         public MainWindow()
         {
+            DataContext = this;
             InitializeComponent();
+        }
+
+        public string text
+        {
+            get
+            {
+                return "www.google.it";
+            }
+        }
+
+        private void TextEmoji_LinkClicked(string link)
+        {
+            System.Console.WriteLine("Clicked" + link);
+        }
+
+        private void TextEmoji_SizeChildrenChanged(Size obj)
+        {
+
         }
     }
 }

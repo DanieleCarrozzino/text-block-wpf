@@ -9,7 +9,10 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
 
-        <text:TextEmoji Text="Lorem ipsum dolor sit amet, 😍 consectetur adipiscing elit, www.google.it sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequa 😒"/>
-
+        <text:TextEmoji 
+            Text="{Binding text}"
+            LinkClicked="TextEmoji_LinkClicked"
+            SizeChildrenChanged="TextEmoji_SizeChildrenChanged"
+            />
     </Grid>
 </Window>

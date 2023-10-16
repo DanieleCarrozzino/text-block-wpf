@@ -14,11 +14,12 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
+using System.Windows.Shapes;
 using TextEmoji.@interface;
 
 namespace TextEmoji.objects
 {
-    public class TextEmojiImage : System.Windows.Controls.Image, ITextEmojiImage
+    public class TextEmojiImage : FrameworkElement, ITextEmojiImage
     {
         // Lines positions
         private List<int> textIntegers = new List<int>();
@@ -45,23 +46,36 @@ namespace TextEmoji.objects
         private bool startSelected = false;
 
         // Margin text
-        Point linePosition = new Point(20, 20);
+        Point linePosition = new Point(0, 0);
 
         // call from xaml or from code
         private bool callFromXaml = false;
         private bool initilized = false;
 
+        // Parent
+        private ITextEmoji parent = null;
+
+        //------------
+        //
+        // ACTION
+        //
+        //------------
+        public event Action<string> LinkClicked;
+
         public TextEmojiImage()
         {
-            Stretch = Stretch.None;
-            callFromXaml = true;
+            Visibility          = Visibility.Collapsed;
+            callFromXaml        = true;
+            HorizontalAlignment = HorizontalAlignment.Left;
         }
 
-        public TextEmojiImage(string text)
+        public TextEmojiImage(string text, ITextEmoji parent)
         {
-            Stretch = Stretch.None;
-            Text = text;
-            callFromXaml = false;
+            Visibility          = Visibility.Collapsed;
+            Text                = text;
+            callFromXaml        = false;
+            HorizontalAlignment = HorizontalAlignment.Left;
+            this.parent         = parent;
         }
 
         // Text to draw
@@ -107,7 +121,7 @@ namespace TextEmoji.objects
             initilized = true;
             emojiCollection = EmojiData.MatchOne.Matches(text);
             linkMatches = Utiltity.CheckValidUrl(text);
-            mainTextSource = HighLightText();
+            HighLightText();
 
             MouseMove += OnMouseMove;
             MouseUp += OnMouseUp;
@@ -171,50 +185,46 @@ namespace TextEmoji.objects
         /// </summary>
         private void drawText()
         {
-            Source = new DrawingImage(GetTextDest(mainTextSource));
+            InvalidateVisual();
         }
 
-        /// <summary>
-        /// Get the drawing group to draw from the TextSource
-        /// </summary>
-        /// <param name="textSource"></param>
-        /// <returns></returns>
-        private DrawingGroup GetTextDest(CustomTextSource textSource)
+
+
+        protected override void OnRender(DrawingContext dc)
         {
-
-            int textStorePosition = 0;
+            int textSourcePosition = 0;
             textIntegers.Clear();
-            linePosition.Y = 20;
-            linePosition.X = 20;
-
-            // Create a DrawingGroup object for storing formatted text.
-            var textDest = new DrawingGroup();
-            DrawingContext dc = textDest.Open();
+            linePosition.Y  = 0;
+            linePosition.X  = 0;
+            int width       = 0;
 
             CustomTextParagraphProperties customTextParagraphProperties
                 = new CustomTextParagraphProperties(new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR));
             TextFormatter formatter = TextFormatter.Create();
 
             // Format each line of text from the text store and draw it.
-            while (textStorePosition < textSource.Text.Length && (linePosition.Y < height_object || height_object == 0))
+            while (textSourcePosition < mainTextSource.Text.Length && (linePosition.Y < height_object || height_object == 0))
             {
                 try
                 {
                     // Create a textline from the text store using the TextFormatter object.
                     using (TextLine line = formatter.FormatLine(
-                        textSource,
-                        textStorePosition,
+                        mainTextSource,
+                        textSourcePosition,
                         width_object,
                         customTextParagraphProperties,
                         null))
                     {
 
                         // Define and draw the line
-                        textIntegers.Add(textStorePosition);
+                        textIntegers.Add(textSourcePosition);
                         line.Draw(dc, linePosition, InvertAxes.None);
-                        textStorePosition += line.Length;
-                        linePosition.Y += line.Height;
 
+                        // define the width of the draw
+                        if (line.Width > width) width = (int)line.Width;
+
+                        textSourcePosition  += line.Length;
+                        linePosition.Y      += line.Height;
 
                         // DRAW EMOJI
                         //
@@ -225,15 +235,15 @@ namespace TextEmoji.objects
 
                         foreach (Match match in emojiCollection)
                         {
-                            if (textStorePosition - line.Length < match.Index && textStorePosition > match.Index)
+                            if (textSourcePosition - line.Length < match.Index && textSourcePosition > match.Index)
                             {
                                 double distance = line.GetDistanceFromCharacterHit(new CharacterHit(match.Index, 0));
-                                Point point = new(distance + 20 - 2, linePosition.Y - line.Height - 4);
+                                Point point = new(distance - 2, linePosition.Y - line.Height - 4);
 
-                                double width = Const.FontSize + 6;
-                                double height = Const.FontSize + 6;
+                                double width_o    = Const.FontSize + 6;
+                                double height_o   = Const.FontSize + 6;
 
-                                var di = new DrawingImage(Emoji.Wpf.Image.RenderEmoji(match.Value, out width, out height));
+                                var di = new DrawingImage(Emoji.Wpf.Image.RenderEmoji(match.Value, out width_o, out height_o));
                                 di.Freeze();
                                 Rect imageRect = new Rect(point, new Size(Const.FontSize + 6, Const.FontSize + 6));
                                 dc.DrawImage(di, imageRect);
@@ -244,12 +254,14 @@ namespace TextEmoji.objects
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
+                    return;
+                }
+                finally
+                {
+                    if (parent != null)
+                        parent.resize(width, (int)linePosition.Y);
                 }
             }
-
-            // Persist the drawn text content.
-            dc.Close();
-            return textDest;
         }
 
         /// <summary>
@@ -259,7 +271,8 @@ namespace TextEmoji.objects
         /// <param name="length"></param>
         private void clickLink(int start, int length)
         {
-            Console.WriteLine("Click - " + Text.Substring(start, length));
+            if(parent != null)  parent.linkClicked(mainTextSource.Text.Substring(start, length));
+            else                LinkClicked?.Invoke(mainTextSource.Text.Substring(start, length));
         }
 
 
@@ -335,7 +348,7 @@ namespace TextEmoji.objects
         private CharacterHit GetCharacterFromPoint(Point point)
         {
             // Get line position
-            int index = Math.Max((int)(point.Y + (int)Const.FontSize) / (int)Const.FontSize - 1, 0);
+            int index = Math.Max(((int)(point.Y) + (int)Const.FontSize) / (int)Const.FontSize - 1, 0);
             if (index >= textIntegers.Count) return new CharacterHit(mainTextSource.Text.Length - 1, 0);
 
             int storePosition = textIntegers[index];
@@ -355,16 +368,15 @@ namespace TextEmoji.objects
             }
         }
 
-        private CustomTextSource HighLightText()
+        private void HighLightText()
         {
             List<(int, int, int)> highList = new List<(int, int, int)>();
             foreach (Match match in linkMatches)
             {
                 highList.Add((match.Index, match.Length, (int)CustomTextSource.TYPE.LINK));
             }
-            CustomTextSource textSource = new CustomTextSource(Text, highList);
-            Source = new DrawingImage(GetTextDest(textSource));
-            return textSource;
+            mainTextSource = new CustomTextSource(Text, highList);
+            this.Visibility = Visibility.Visible;
         }
 
 
@@ -383,7 +395,7 @@ namespace TextEmoji.objects
             }
 
             mainTextSource = mainTextSource.AddSelection(start, start + Math.Abs(length));
-            Source = new DrawingImage(GetTextDest(mainTextSource));
+            InvalidateVisual();
         }
 
     }

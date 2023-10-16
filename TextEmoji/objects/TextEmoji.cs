@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using TextEmoji.@interface;
 
 namespace TextEmoji.objects
 {
-    public class TextEmoji : Grid
+    public class TextEmoji : Grid, ITextEmoji
     {
-        TextEmojiImage image = null;
+        private TextEmojiImage image    = null;
+        public event Action<string> LinkClicked;
+        public event Action<Size>   SizeChildrenChanged;
 
         public TextEmoji()
         {
-            SizeChanged += TextEmoji_SizeChanged;
+            SizeChanged         += TextEmoji_SizeChanged;
+            HorizontalAlignment = HorizontalAlignment.Stretch;
         }
 
         private void TextEmoji_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -40,9 +44,18 @@ namespace TextEmoji.objects
 
         private void OnTextPropertyChanged(string text)
         {
-            image = new TextEmojiImage(text);
+            image = new TextEmojiImage(text, this);
             Children.Add(image);
         }
 
+        public void linkClicked(string link)
+        {
+            LinkClicked?.Invoke(link);
+        }
+
+        public void resize(int width, int height)
+        {
+            SizeChildrenChanged?.Invoke(new Size(width, height));
+        }
     }
 }
