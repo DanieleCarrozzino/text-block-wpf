@@ -4,7 +4,7 @@ designed to enhance the user interface by seamlessly incorporating text-based em
 and interactive text highlighting. Comprising two key classes, TextEmoji and TextEmojiImage, 
 this library simplifies the process of rendering text with emojis and adding interactive elements within a WPF environment.
 
-![Example from demo app](https://github.com/DanieleCarrozzino/text-block-wpf/blob/master/Resources/screen.png)
+![Example from demo app](https://github.com/DanieleCarrozzino/text-block-wpf/blob/master/Resources/screen2.png)
 
 ## Key Features:
 
