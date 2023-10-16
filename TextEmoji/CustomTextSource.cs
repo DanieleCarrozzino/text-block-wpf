@@ -26,6 +26,7 @@ namespace TextEmoji
         /// Highlight list of size and position
         /// </summary>
         public HashSet<(int, int, int)> positionList = new HashSet<(int, int, int)>();
+        public HashSet<(int, int, int)> positionLink = new HashSet<(int, int, int)>();
 
         public int startIndex = 0;
         public int lastIndex = 0;
@@ -49,38 +50,9 @@ namespace TextEmoji
                 this.lastIndex = startIndex;
             }
 
-            // Remove last selection
-            (int, int, int) itemToRemove        = (-1, -1, -1);
-            (int, int, int) itemToRemoveBoth    = (-1, -1, -1);
-            foreach (var item in positionList)
-            {
-                if (item.Item3 == (int)TYPE.SELECTION)
-                {
-                    itemToRemove = item;
-                }
-                else if (item.Item3 == (int)TYPE.BOTH)
-                {
-                    itemToRemoveBoth = item;
-
-                    // Nel caso il Both sia successivo al suo parent
-                    // aggiungo il both al precedente
-                    // per sapere se è il precedente il suo parent 
-                    // controllo che positonList[index - 1]
-                    // (positionList - 1) index + length >= (item) index
-                    
-                    /*var i = positionList.IndexOf(item);
-                    if (positionList[i].Item1 + positionList[i].Item2 >= item.Item1)
-                    {
-                        // il parent è il precedente
-                    }
-                    else
-                    {
-                        // il parent è il successivo
-                    }*/
-                }
-            }
-            positionList.Remove(itemToRemove);
-            positionList.Remove(itemToRemoveBoth);
+            // clear last selection
+            positionList.Clear();
+            positionList.UnionWith(positionLink);
 
             // Define text and position list
             positionList.Add((startIndex, lastIndex - startIndex, (int)TYPE.SELECTION));
@@ -148,7 +120,7 @@ namespace TextEmoji
                         var length = Math.Min((previous.Item1 + previous.Item2) - item1, item2);
                         positionList.Add((item1, length, (int)TYPE.BOTH));
 
-                        // Aggiungo il seleeted se ne è avanzato
+                        // Aggiungo il selected se ne è avanzato
                         if(item2 > length)
                         {
                             // prendendo l'esempio di prima
@@ -164,8 +136,12 @@ namespace TextEmoji
                             var new_select_length = item2 - length;
                             positionList.Add((new_select_index, new_select_length, (int)TYPE.SELECTION));
                         }
+                        else
+                        {
+                            //TODO altrimenti aggiungo il link
+                        }
                     }
-                    else if (item1 + item2 > next.Item1 && next.Item1 >= 0)
+                    else if (item1 + item2 >= next.Item1 && next.Item1 >= 0)
                     {
                         // In questo caso la selezione è sovrapposta
                         // a un elemento successivo all'interno
@@ -176,7 +152,7 @@ namespace TextEmoji
                         // dell'elemento successivo
                         //
                         // TODO nel caso lo racchiudi del tutto
-                        positionList.Add((item1, next.Item1 - item1, (int)TYPE.SELECTION));
+                        positionList.Add((item1 - 1, next.Item1 - item1, (int)TYPE.SELECTION));
 
                         // Adesso disgeno il both venutosi a creare
                         // tra il next e l'attuale
@@ -198,6 +174,16 @@ namespace TextEmoji
                             // la nuova start
                             positionList.Add((next.Item1 + length, next.Item2 - length, (int)TYPE.LINK));
                         }
+                        else
+                        {
+                            // devo aggiungere la selection 
+                            // rimanente
+                            // lo start è da next.Item1 + length
+                            // la lunghezza :
+                            // prendo la fine di quella attuale cioè: item1 + item2
+                            // e rimuovere la posizione finale di quello precedente
+                            positionList.Add((next.Item1 + length, (item1 + item2) - (next.Item1 + length), (int)TYPE.SELECTION));
+                        }
 
                     }
                     else 
@@ -214,6 +200,7 @@ namespace TextEmoji
             }
 
             positionList = positionList.ToList().OrderBy(item => item.Item1).ToHashSet();
+            positionLink = positionList.Where(item => item.Item3 == (int)TYPE.LINK).ToHashSet();
             Text = text;
         }
 

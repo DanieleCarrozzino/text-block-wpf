@@ -18,6 +18,14 @@ namespace TextEmoji.@interface
         public void linkClicked(string link);
 
         /// <summary>
+        /// Events to handle inside the parent,
+        /// a link is been clicked with the right 
+        /// mouse button
+        /// </summary>
+        /// <param name="link"></param>
+        public void rightLinkClicked(string link);
+
+        /// <summary>
         /// Resize container 
         /// </summary>
         /// <param name="width"></param>

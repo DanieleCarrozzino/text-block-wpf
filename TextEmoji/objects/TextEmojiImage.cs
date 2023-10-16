@@ -61,6 +61,7 @@ namespace TextEmoji.objects
         //
         //------------
         public event Action<string> LinkClicked;
+        public event Action<string> RightLinkClicked;
 
         public TextEmojiImage()
         {
@@ -253,6 +254,17 @@ namespace TextEmoji.objects
             else                LinkClicked?.Invoke(mainTextSource.Text.Substring(start, length));
         }
 
+        /// <summary>
+        /// TODO set this method accessible from the outside
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="length"></param>
+        private void rightclickLink(int start, int length)
+        {
+            if (parent != null) parent.rightLinkClicked(mainTextSource.Text.Substring(start, length));
+            else RightLinkClicked?.Invoke(mainTextSource.Text.Substring(start, length));
+        }
+
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
@@ -300,6 +312,31 @@ namespace TextEmoji.objects
             }
 
             base.OnMouseLeftButtonUp(e);
+        }
+
+        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+        {
+
+            // right click on link or text
+            // Get mouse position
+            Point p = e.GetPosition(this);
+
+            // Get the first Character info
+            var character = GetCharacterFromPoint(p);
+
+            if(linkMatches != null)
+            {
+                foreach (Match match in linkMatches)
+                {
+                    if (character.FirstCharacterIndex >= match.Index &&
+                        character.FirstCharacterIndex <= match.Index + match.Length)
+                    {
+                        rightclickLink(match.Index, match.Length);
+                    }
+                }
+            }
+
+            base.OnMouseRightButtonUp(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)

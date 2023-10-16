@@ -14,6 +14,7 @@ namespace TextEmoji.objects
     {
         private TextEmojiImage image    = null;
         public event Action<string> LinkClicked;
+        public event Action<string> RightLinkClicked;
         public event Action<Size>   SizeChildrenChanged;
 
         public TextEmoji()
@@ -48,14 +49,32 @@ namespace TextEmoji.objects
             Children.Add(image);
         }
 
+        /// <summary>
+        /// Event to handle the left mouse click on a link
+        /// </summary>
+        /// <param name="link"></param>
         public void linkClicked(string link)
         {
             LinkClicked?.Invoke(link);
         }
 
+        /// <summary>
+        /// Resize the parent with the size of the text
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         public void resize(int width, int height)
         {
             SizeChildrenChanged?.Invoke(new Size(width, height));
+        }
+
+        /// <summary>
+        /// Right mouse event click on a link
+        /// </summary>
+        /// <param name="link"></param>
+        public void rightLinkClicked(string link)
+        {
+            RightLinkClicked?.Invoke(link);
         }
     }
 }
