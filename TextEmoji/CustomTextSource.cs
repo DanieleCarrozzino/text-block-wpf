@@ -289,9 +289,10 @@ namespace TextEmoji
                     else
                     {
                         style = CustomTextRunProperties.STYLE.BOTH;
-                    }                            
+                    }
+                    var final_length = Math.Min(Math.Max(1, length - (textSourceCharacterIndex - index)), Text.Length);
                     return new TextCharacters(Text, textSourceCharacterIndex,
-                                            length - (textSourceCharacterIndex - index), new CustomTextRunProperties(style));
+                                            final_length, new CustomTextRunProperties(style));
                 }
 
                 // Improvment potrei eliminare gli elementi

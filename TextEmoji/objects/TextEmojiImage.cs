@@ -123,9 +123,8 @@ namespace TextEmoji.objects
             linkMatches = Utiltity.CheckValidUrl(text);
             HighLightText();
 
-            MouseMove += OnMouseMove;
-            MouseUp += OnMouseUp;
-            LostMouseCapture += OnLostMouseCapture;
+            MouseUp             += OnMouseUp;
+            LostMouseCapture    += OnLostMouseCapture;
         }
 
         /// <summary>
@@ -156,27 +155,6 @@ namespace TextEmoji.objects
         {
             startSelected = false;
             Mouse.Capture(null);
-            MouseMove -= OnMouseMove;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnMouseMove(object sender, MouseEventArgs e)
-        {
-            // Catch the move only during the selection mode
-            if (!startSelected) return;
-
-            // Get mouse position
-            Point p = Mouse.GetPosition(this);
-
-            // Get the first Character info
-            lastCharacter = GetCharacterFromPoint(p);
-            lastPoint = p;
-
-            drawHighlightTextFromFirstCharacterToTheLastOne(firstCharacter, lastCharacter);
         }
 
 
@@ -280,7 +258,6 @@ namespace TextEmoji.objects
         {
             startSelected = true;
             Mouse.Capture(this);
-            MouseMove += OnMouseMove;
 
             // Get mouse position
             Point p = Mouse.GetPosition(this);
@@ -302,9 +279,6 @@ namespace TextEmoji.objects
             // Get the first Character info
             lastCharacter = GetCharacterFromPoint(p);
             lastPoint = p;
-
-            // rmeove overhead
-            MouseMove -= OnMouseMove;
 
             // if first is eqaul to the last one character
             // I perform a link click if it's a match
