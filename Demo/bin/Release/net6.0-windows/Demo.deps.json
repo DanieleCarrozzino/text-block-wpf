@@ -1,0 +1,88 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "Demo/1.0.0": {
+        "dependencies": {
+          "TextEmoji": "1.0.0"
+        },
+        "runtime": {
+          "Demo.dll": {}
+        }
+      },
+      "TextEmoji/1.0.0": {
+        "runtime": {
+          "TextEmoji.dll": {}
+        }
+      },
+      "Emoji.Wpf/0.3.4.0": {
+        "runtime": {
+          "Emoji.Wpf.dll": {
+            "assemblyVersion": "0.3.4.0",
+            "fileVersion": "0.3.4.0"
+          }
+        }
+      },
+      "Typography.GlyphLayout/1.0.0.0": {
+        "runtime": {
+          "Typography.GlyphLayout.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Typography.OpenFont/1.0.0.0": {
+        "runtime": {
+          "Typography.OpenFont.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Stfu/0.1.7.0": {
+        "runtime": {
+          "Stfu.dll": {
+            "assemblyVersion": "0.1.7.0",
+            "fileVersion": "0.1.7.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Demo/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TextEmoji/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Emoji.Wpf/0.3.4.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Typography.GlyphLayout/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Typography.OpenFont/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Stfu/0.1.7.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

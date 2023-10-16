@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Emoji.Wpf">
+      <HintPath>..\..\..\emoji.wpf\Emoji.Wpf\bin\Release\netcoreapp3.1\Emoji.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Stfu">
+      <HintPath>..\..\..\..\..\source\repos\WpfApp8\WpfApp8\bin\Debug\net6.0-windows\Stfu.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
