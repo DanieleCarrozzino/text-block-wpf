@@ -6,13 +6,41 @@
         xmlns:text="clr-namespace:TextEmoji.objects;assembly=TextEmoji"
         xmlns:local="clr-namespace:Demo"
         mc:Ignorable="d"
+        SizeChanged="Window_SizeChanged"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
 
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+        
+        <ListView
+            Grid.Row="0"
+            Name="list">
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+
+                    <text:TextEmoji 
+                        Text="{Binding}"
+                        Background="Red"
+                        Width="200"
+                        />
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+
         <text:TextEmoji 
+            Grid.Row="1"
+            Name="first"
             Text="{Binding text}"
-            LinkClicked="TextEmoji_LinkClicked"
-            SizeChildrenChanged="TextEmoji_SizeChildrenChanged"
+            Background="AliceBlue"
             />
+
     </Grid>
 </Window>

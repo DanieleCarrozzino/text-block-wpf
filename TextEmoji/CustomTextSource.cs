@@ -36,6 +36,13 @@ namespace TextEmoji
             Text = text;
         }
 
+        public CustomTextSource ClearSelection()
+        {
+            positionList.Clear();
+            positionList.UnionWith(positionLink);
+            return new CustomTextSource(Text, positionList.OrderBy(item => item.Item1).ToList());
+        }
+
         public CustomTextSource AddSelection(int startIndex, int lastIndex)
         {
             // Create selection info
@@ -309,6 +316,24 @@ namespace TextEmoji
         {
             // If you don't have text effects, you can return the same character index.
             return textSourceCharacterIndex;
+        }
+
+        public string GetSelectedText()
+        {
+            int start = -1;
+            int length = 0;
+            foreach(var item in positionList)
+            {
+                if(item.Item3 == (int)TYPE.SELECTION || item.Item3 == (int)TYPE.BOTH)
+                {
+                    if(start == -1)
+                        start = item.Item1;
+                    length += item.Item2;
+                }
+            }
+            if(start != -1 && length > 0)
+                return Text.Substring(start, length + 1);
+            return "";
         }
     }
 }

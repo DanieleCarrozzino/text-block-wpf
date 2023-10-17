@@ -27,24 +27,50 @@ namespace Demo
         {
             DataContext = this;
             InitializeComponent();
+
+            List<string> stringList = new List<string>
+            {
+                "Item 1",
+                "Item 2",
+                "Item 3",
+                "Item 4"
+            };
+
+            list.ItemsSource = stringList;
         }
 
         public string text
         {
             get
             {
-                return "me kjqbw kxcb wsdkcghvkwb cdkgh edcbhw ecdmbhn vwsdhjc v lsjh vakjd hv www.google.it alsjh vad vkjadh fvkjah dflvkjha dlfvhj sldfj ";
+                return "me test di un m d,sh vljwdh fvkljw dfvsdò😍 vkhsldjh vljsdhb voljh sdlkvb poswdhfb vpkòhjwb dflbvk sldbnfpwijbnrfpbòjnwpdfkjbnpkldnjwb";
             }
         }
 
         private void TextEmoji_LinkClicked(string link)
         {
-            System.Console.WriteLine("Clicked" + link);
+            System.Console.WriteLine("Clicked " + link);
         }
 
-        private void TextEmoji_SizeChildrenChanged(Size obj)
+        private void TextEmoji_SizeChildrenChanged(Size size)
+        {
+            System.Console.WriteLine("Size changed " + "w :" + size.Width + " h :" + size.Height);
+        }
+
+        private void TextEmoji_SelectedChanged(string selectedText)
+        {
+            System.Console.WriteLine(selectedText);
+        }
+
+        private void TextEmoji_RightLinkClicked(string obj)
         {
 
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var w = e.NewSize.Width / 3;
+            first.Size = new Size(w, e.NewSize.Height);
         }
     }
 }

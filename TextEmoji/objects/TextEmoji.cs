@@ -12,19 +12,23 @@ namespace TextEmoji.objects
 {
     public class TextEmoji : Grid, ITextEmoji
     {
+        private Manager manager = Manager.GetInstance();
         private TextEmojiImage image    = null;
         public event Action<string> LinkClicked;
         public event Action<string> RightLinkClicked;
         public event Action<Size>   SizeChildrenChanged;
+        public event Action<string> SelectedChanged;
+        public event Action<string> CopyTextAction;
 
         public TextEmoji()
         {
-            SizeChanged         += TextEmoji_SizeChanged;
+            SizeChanged += TextEmoji_SizeChanged;
             HorizontalAlignment = HorizontalAlignment.Stretch;
         }
 
         private void TextEmoji_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            SizeChanged -= TextEmoji_SizeChanged;
             if (image != null)
             {
                 image.Size = new Size(e.NewSize.Width, 0);
@@ -49,6 +53,56 @@ namespace TextEmoji.objects
             Children.Add(image);
         }
 
+        public Size Size
+        {
+            set
+            {
+                if(image != null)
+                    image.Size = new Size(value.Width, 0);
+            }
+        }
+
+        //***************
+        //
+        // CLEAN methods
+        //
+        //***************
+
+        // Ogni volta che seleziono, evidenzio o modifico
+        // un textEmoji devo salvarmelo all'interno
+        // del manager per poterlo "pulire" nel momento in
+        // cui inizio a "modificarne" un altro
+        //
+        // es. se selezino un testo in uno di loro
+        // la selezione vecchia deve scomparire
+
+        /// <summary>
+        /// Clean from selection
+        /// </summary>
+        public void CleanImage()
+        {
+            // Evento sporco
+            if (image == null) return;
+
+            image.CleanImage();
+        }
+
+        /// <summary>
+        /// Clean from mouse down
+        /// </summary>
+        public void CleanLastImage()
+        {
+            manager.cleanLastTextEmoji();
+        }
+
+
+
+        //*****************
+        //
+        // EVENTS methods
+        //
+        //*****************
+
         /// <summary>
         /// Event to handle the left mouse click on a link
         /// </summary>
@@ -65,6 +119,8 @@ namespace TextEmoji.objects
         /// <param name="height"></param>
         public void resize(int width, int height)
         {
+            Width = width;
+            Height = height;
             SizeChildrenChanged?.Invoke(new Size(width, height));
         }
 
@@ -75,6 +131,27 @@ namespace TextEmoji.objects
         public void rightLinkClicked(string link)
         {
             RightLinkClicked?.Invoke(link);
+        }
+
+        /// <summary>
+        /// Get the selected text after a mouse up 
+        /// over the textemoji object
+        /// </summary>
+        /// <param name="selected"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void Selected(string selected)
+        {
+            manager.saveLastTextEmojiModifiedAndCleanThePreviousOne(this);
+            SelectedChanged?.Invoke(selected);
+        }
+
+        /// <summary>
+        /// Get the copied text
+        /// </summary>
+        /// <param name="text"></param>
+        public void CopyText(string text)
+        {
+            CopyTextAction?.Invoke(text);
         }
     }
 }

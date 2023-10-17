@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -55,6 +56,9 @@ namespace TextEmoji.objects
         // Parent
         private ITextEmoji parent = null;
 
+        // Selected Text
+        private string selectedText = "";
+
         //------------
         //
         // ACTION
@@ -62,12 +66,14 @@ namespace TextEmoji.objects
         //------------
         public event Action<string> LinkClicked;
         public event Action<string> RightLinkClicked;
+        public event Action<string> SelectedChanged;
 
         public TextEmojiImage()
         {
             Visibility          = Visibility.Collapsed;
             callFromXaml        = true;
             HorizontalAlignment = HorizontalAlignment.Left;
+            this.Cursor         = Cursors.IBeam;
         }
 
         public TextEmojiImage(string text, ITextEmoji parent)
@@ -77,6 +83,7 @@ namespace TextEmoji.objects
             callFromXaml        = false;
             HorizontalAlignment = HorizontalAlignment.Left;
             this.parent         = parent;
+            this.Cursor         = Cursors.IBeam;
         }
 
         // Text to draw
@@ -126,6 +133,7 @@ namespace TextEmoji.objects
 
             MouseUp             += OnMouseUp;
             LostMouseCapture    += OnLostMouseCapture;
+            EventManager.RegisterClassHandler(typeof(Window), Keyboard.KeyDownEvent, new KeyEventHandler(OnKeyDown), true);
         }
 
         /// <summary>
@@ -168,81 +176,6 @@ namespace TextEmoji.objects
         }
 
 
-
-        protected override void OnRender(DrawingContext dc)
-        {
-            int textSourcePosition = 0;
-            textIntegers.Clear();
-            linePosition.Y  = 0;
-            linePosition.X  = 0;
-            int width       = 0;
-
-            CustomTextParagraphProperties customTextParagraphProperties
-                = new CustomTextParagraphProperties(new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR));
-            TextFormatter formatter = TextFormatter.Create();
-
-            // Format each line of text from the text store and draw it.
-            while (textSourcePosition < mainTextSource.Text.Length && (linePosition.Y < height_object || height_object == 0))
-            {
-                try
-                {
-                    // Create a textline from the text store using the TextFormatter object.
-                    using (TextLine line = formatter.FormatLine(
-                        mainTextSource,
-                        textSourcePosition,
-                        width_object,
-                        customTextParagraphProperties,
-                        null))
-                    {
-
-                        // Define and draw the line
-                        textIntegers.Add(textSourcePosition);
-                        line.Draw(dc, linePosition, InvertAxes.None);
-
-                        // define the width of the draw
-                        if (line.Width > width) width = (int)line.Width;
-
-                        textSourcePosition  += line.Length;
-                        linePosition.Y      += line.Height;
-
-                        // DRAW EMOJI
-                        //
-                        // ho bisogno di torvare la posizione delle varie emoji
-                        // ho la lista delle emoji all'interno di emojiCollection
-                        // devo controllare che la linea che sto gestendo non contenga
-                        // l'emoji che voglio disegnare
-
-                        foreach (Match match in emojiCollection)
-                        {
-                            if (textSourcePosition - line.Length < match.Index && textSourcePosition > match.Index)
-                            {
-                                double distance = line.GetDistanceFromCharacterHit(new CharacterHit(match.Index, 0));
-                                Point point = new(distance - 2, linePosition.Y - line.Height - 4);
-
-                                double width_o    = Const.FontSize + 6;
-                                double height_o   = Const.FontSize + 6;
-
-                                var di = new DrawingImage(Emoji.Wpf.Image.RenderEmoji(match.Value, out width_o, out height_o));
-                                di.Freeze();
-                                Rect imageRect = new Rect(point, new Size(Const.FontSize + 6, Const.FontSize + 6));
-                                dc.DrawImage(di, imageRect);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    return;
-                }
-                finally
-                {
-                    if (parent != null)
-                        parent.resize(width, (int)linePosition.Y);
-                }
-            }
-        }
-
         /// <summary>
         /// TODO set this method accessible from the outside
         /// </summary>
@@ -265,95 +198,10 @@ namespace TextEmoji.objects
             else RightLinkClicked?.Invoke(mainTextSource.Text.Substring(start, length));
         }
 
-
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        private void selectedChanged(string text)
         {
-            startSelected = true;
-            Mouse.Capture(this);
-
-            // Get mouse position
-            Point p = Mouse.GetPosition(this);
-
-            // Get the first Character info
-            firstCharacter = GetCharacterFromPoint(p);
-            firstPoint = p;
-
-            base.OnMouseLeftButtonDown(e);
-        }
-
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
-        {
-            startSelected = false;
-
-            // Get mouse position
-            Point p = e.GetPosition(this);
-
-            // Get the first Character info
-            lastCharacter = GetCharacterFromPoint(p);
-            lastPoint = p;
-
-            // if first is eqaul to the last one character
-            // I perform a link click if it's a match
-            if (firstCharacter == lastCharacter && linkMatches != null)
-            {
-                foreach (Match match in linkMatches)
-                {
-                    if (firstCharacter.FirstCharacterIndex >= match.Index &&
-                        firstCharacter.FirstCharacterIndex <= match.Index + match.Length)
-                    {
-                        clickLink(match.Index, match.Length);
-                    }
-                }
-            }
-            // Draw single highlight
-            else
-            {
-                drawHighlightTextFromFirstCharacterToTheLastOne(firstCharacter, lastCharacter);
-            }
-
-            base.OnMouseLeftButtonUp(e);
-        }
-
-        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
-        {
-
-            // right click on link or text
-            // Get mouse position
-            Point p = e.GetPosition(this);
-
-            // Get the first Character info
-            var character = GetCharacterFromPoint(p);
-
-            if(linkMatches != null)
-            {
-                foreach (Match match in linkMatches)
-                {
-                    if (character.FirstCharacterIndex >= match.Index &&
-                        character.FirstCharacterIndex <= match.Index + match.Length)
-                    {
-                        rightclickLink(match.Index, match.Length);
-                    }
-                }
-            }
-
-            base.OnMouseRightButtonUp(e);
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            if (!startSelected) return;
-
-            // Get mouse position
-            Point p = Mouse.GetPosition(this);
-
-            // Get the first Character info
-            lastCharacter = GetCharacterFromPoint(p);
-            lastPoint = p;
-
-            // draw
-            drawHighlightTextFromFirstCharacterToTheLastOne(firstCharacter, lastCharacter);
-
-            base.OnMouseMove(e);
+            if (parent != null) parent.Selected(text);
+            else SelectedChanged?.Invoke(text);
         }
 
         private CharacterHit GetCharacterFromPoint(Point point)
@@ -392,7 +240,7 @@ namespace TextEmoji.objects
 
 
 
-        private void drawHighlightTextFromFirstCharacterToTheLastOne(CharacterHit first, CharacterHit last)
+        private (int, int) drawHighlightTextFromFirstCharacterToTheLastOne(CharacterHit first, CharacterHit last)
         {
             var length = last.FirstCharacterIndex - first.FirstCharacterIndex;
             var start = first.FirstCharacterIndex;
@@ -406,6 +254,219 @@ namespace TextEmoji.objects
             }
 
             mainTextSource = mainTextSource.AddSelection(start, start + Math.Abs(length));
+            InvalidateVisual();
+            return (start, Math.Abs(length));
+        }
+
+        //*****************
+        //
+        // OVERRIDE methods
+        //
+        //*****************
+
+        protected override void OnRender(DrawingContext dc)
+        {
+            int textSourcePosition = 0;
+            textIntegers.Clear();
+            linePosition.Y = 0;
+            linePosition.X = 0;
+            int width = 0;
+
+            CustomTextParagraphProperties customTextParagraphProperties
+                = new CustomTextParagraphProperties(new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR));
+            TextFormatter formatter = TextFormatter.Create();
+
+            // Format each line of text from the text store and draw it.
+            while (textSourcePosition < mainTextSource.Text.Length && (linePosition.Y < height_object || height_object == 0))
+            {
+                try
+                {
+                    // Create a textline from the text store using the TextFormatter object.
+                    using (TextLine line = formatter.FormatLine(
+                        mainTextSource,
+                        textSourcePosition,
+                        width_object,
+                        customTextParagraphProperties,
+                        null))
+                    {
+
+                        // Define and draw the line
+                        textIntegers.Add(textSourcePosition);
+                        line.Draw(dc, linePosition, InvertAxes.None);
+
+                        // define the width of the draw
+                        if (line.Width > width) width = (int)line.Width;
+
+                        textSourcePosition += line.Length;
+                        linePosition.Y += line.Height;
+
+                        // DRAW EMOJI
+                        //
+                        // ho bisogno di torvare la posizione delle varie emoji
+                        // ho la lista delle emoji all'interno di emojiCollection
+                        // devo controllare che la linea che sto gestendo non contenga
+                        // l'emoji che voglio disegnare
+
+                        foreach (Match match in emojiCollection)
+                        {
+                            if (textSourcePosition - line.Length < match.Index && textSourcePosition > match.Index)
+                            {
+                                double distance = line.GetDistanceFromCharacterHit(new CharacterHit(match.Index, 0));
+                                Point point = new(distance - 2, linePosition.Y - line.Height - 4);
+
+                                double width_o = Const.FontSize + 6;
+                                double height_o = Const.FontSize + 6;
+
+                                var di = new DrawingImage(Emoji.Wpf.Image.RenderEmoji(match.Value, out width_o, out height_o));
+                                di.Freeze();
+                                Rect imageRect = new Rect(point, new Size(Const.FontSize + 6, Const.FontSize + 6));
+                                dc.DrawImage(di, imageRect);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    return;
+                }
+                finally
+                {
+                    if (parent != null)
+                        parent.resize(width, (int)linePosition.Y);
+                }
+            }
+        }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            startSelected = true;
+            this.Focus();
+
+            // Get mouse position
+            Point p = Mouse.GetPosition(this);
+
+            // Get the first Character info
+            firstCharacter = GetCharacterFromPoint(p);
+            firstPoint = p;
+
+            // Clean last selection
+            if (parent != null)
+                parent.CleanLastImage();
+
+            base.OnMouseLeftButtonDown(e);
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            startSelected = false;
+
+            // Get mouse position
+            Point p = e.GetPosition(this);
+
+            // Get the first Character info
+            lastCharacter = GetCharacterFromPoint(p);
+            lastPoint = p;
+
+            // if first is eqaul to the last one character
+            // I perform a link click if it's a match
+            if (firstCharacter.FirstCharacterIndex == lastCharacter.FirstCharacterIndex)
+            {
+                if (linkMatches != null)
+                {
+                    foreach (Match match in linkMatches)
+                    {
+                        if (firstCharacter.FirstCharacterIndex >= match.Index &&
+                            firstCharacter.FirstCharacterIndex <= match.Index + match.Length)
+                        {
+                            clickLink(match.Index, match.Length);
+                            return;
+                        }
+                    }
+                }
+                CleanImage();
+            }
+            // Draw single highlight
+            else
+            {
+                var indexes     = drawHighlightTextFromFirstCharacterToTheLastOne(firstCharacter, lastCharacter);
+                selectedText    = mainTextSource.Text.Substring(indexes.Item1, indexes.Item2 + 1);
+                selectedChanged(selectedText);
+            }
+
+            base.OnMouseLeftButtonUp(e);
+        }
+
+        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+        {
+
+            // right click on link or text
+            // Get mouse position
+            Point p = e.GetPosition(this);
+
+            // Get the first Character info
+            var character = GetCharacterFromPoint(p);
+
+            if (linkMatches != null)
+            {
+                foreach (Match match in linkMatches)
+                {
+                    if (character.FirstCharacterIndex >= match.Index &&
+                        character.FirstCharacterIndex <= match.Index + match.Length)
+                    {
+                        rightclickLink(match.Index, match.Length);
+                    }
+                }
+            }
+
+            base.OnMouseRightButtonUp(e);
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (!startSelected) return;
+
+            // Get mouse position
+            Point p = Mouse.GetPosition(this);
+
+            // Get the first Character info
+            lastCharacter = GetCharacterFromPoint(p);
+            lastPoint = p;
+
+            // draw
+            drawHighlightTextFromFirstCharacterToTheLastOne(firstCharacter, lastCharacter);
+
+            base.OnMouseMove(e);
+        }
+
+
+        protected void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            //TODO
+            if (e.Key == Key.C && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                selectedText = mainTextSource.GetSelectedText();
+                if (!selectedText.Equals(""))
+                {
+                    Clipboard.SetText(selectedText);
+                    if (parent != null) parent.CopyText(selectedText);
+                    e.Handled = true;
+                }
+            }
+
+            base.OnKeyDown(e);
+        }
+
+        //***************
+        //
+        // CLEAN methods
+        //
+        //***************
+
+        public void CleanImage()
+        {
+            selectedText = "";
+            mainTextSource = mainTextSource.ClearSelection();
             InvalidateVisual();
         }
 
