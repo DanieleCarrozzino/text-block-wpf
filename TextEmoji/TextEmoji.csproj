@@ -7,12 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Emoji.Wpf">
-      <HintPath>..\..\..\emoji.wpf\Emoji.Wpf\bin\Release\netcoreapp3.1\Emoji.Wpf.dll</HintPath>
+    <None Remove="Lib\Emoji.Wpf.dll" />
+    <None Remove="Lib\Emoji.Wpf2.dll" />
+    <None Remove="Lib\Stfu.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Lib\Emoji.Wpf2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lib\Stfu.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Emoji.Wpf2">
+      <HintPath>Lib\Emoji.Wpf2.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Stfu">
-      <HintPath>..\..\..\..\..\source\repos\WpfApp8\WpfApp8\bin\Debug\net6.0-windows\Stfu.dll</HintPath>
+      <HintPath>Lib\Stfu.dll</HintPath>
     </Reference>
   </ItemGroup>
 

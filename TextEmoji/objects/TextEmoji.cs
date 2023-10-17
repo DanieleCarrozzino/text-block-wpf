@@ -53,13 +53,21 @@ namespace TextEmoji.objects
             Children.Add(image);
         }
 
-        public Size Size
+        public Size SizeContainer
         {
-            set
-            {
-                if(image != null)
-                    image.Size = new Size(value.Width, 0);
-            }
+            get => (Size)GetValue(SizeProperty);
+            set => SetValue(SizeProperty, value);
+        }
+
+        public static readonly DependencyProperty SizeProperty = DependencyProperty.Register(
+            nameof(SizeContainer), typeof(object), typeof(TextEmoji), new FrameworkPropertyMetadata("",
+                (o, e) => (o as TextEmoji)?.OnSizePropertyChanged(e.NewValue))
+            { DefaultUpdateSourceTrigger = UpdateSourceTrigger.LostFocus });
+
+        private void OnSizePropertyChanged(object size)
+        {
+            if (image != null)
+                image.Size = new Size(((Size)size).Width, 0);
         }
 
         //***************

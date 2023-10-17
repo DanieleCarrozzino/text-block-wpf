@@ -20,7 +20,7 @@ namespace Demo
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
         public MainWindow()
@@ -30,10 +30,10 @@ namespace Demo
 
             List<string> stringList = new List<string>
             {
-                "Item 1",
-                "Item 2",
-                "Item 3",
-                "Item 4"
+                "Item 1 swkdj vljwhb vljhewb dlkvcn welvn dfwb vlkjewvbw vjdnkw vf",
+                "Item 2lqjw dckj hewcjh e",
+                "Item 3òsdj vòkwje vòkjw evj wlfje voi2hubevhjb we hklfvlk3erhvlhrlewf vhnlrjewh pv hewrlvjhnlrj lk re",
+                "Item 4wl dfkvòlkw jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerlj"
             };
 
             list.ItemsSource = stringList;
@@ -43,7 +43,7 @@ namespace Demo
         {
             get
             {
-                return "me test di un m d,sh vljwdh fvkljw dfvsdò😍 vkhsldjh vljsdhb voljh sdlkvb poswdhfb vpkòhjwb dflbvk sldbnfpwijbnrfpbòjnwpdfkjbnpkldnjwb";
+                return "Item 4wl dfkvòlkw jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerljItem 4wl dfkvòlkw jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerlj";
             }
         }
 
@@ -70,7 +70,29 @@ namespace Demo
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var w = e.NewSize.Width / 3;
-            first.Size = new Size(w, e.NewSize.Height);
+            first.SizeContainer = new Size(w, e.NewSize.Height);
+            Size = new Size(w, e.NewSize.Height);
+        }
+
+        public void OnPropertyChangedName(string name) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private Size _size = new Size(200, 0);
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public Size Size
+        {
+            get
+            {
+                return _size;
+            }
+            set
+            {
+                _size = value;
+                OnPropertyChangedName("Size");
+
+            }
         }
     }
 }

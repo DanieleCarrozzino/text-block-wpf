@@ -27,7 +27,9 @@
                     <text:TextEmoji 
                         Text="{Binding}"
                         Background="Red"
-                        Width="200"
+                        MinWidth="200"
+                        Width="300"
+                        MaxWidth="350"
                         />
 
                 </DataTemplate>
@@ -39,7 +41,8 @@
             Grid.Row="1"
             Name="first"
             Text="{Binding text}"
-            Background="AliceBlue"
+            Background="AliceBlue"     
+            SizeContainer="{Binding Path=Size}"
             />
 
     </Grid>

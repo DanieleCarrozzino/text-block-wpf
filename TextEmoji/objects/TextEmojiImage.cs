@@ -1,8 +1,9 @@
-﻿using Emoji.Wpf;
+﻿using Emoji.Wpf2;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -131,8 +132,7 @@ namespace TextEmoji.objects
             linkMatches = Utiltity.CheckValidUrl(text);
             HighLightText();
 
-            MouseUp             += OnMouseUp;
-            LostMouseCapture    += OnLostMouseCapture;
+            MouseUp += OnMouseUp;
             EventManager.RegisterClassHandler(typeof(Window), Keyboard.KeyDownEvent, new KeyEventHandler(OnKeyDown), true);
         }
 
@@ -142,16 +142,6 @@ namespace TextEmoji.objects
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            removeMouseCapture();
-        }
-
-        /// <summary>
-        /// Remove mouse capture
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnLostMouseCapture(object sender, MouseEventArgs e)
         {
             removeMouseCapture();
         }
@@ -317,7 +307,7 @@ namespace TextEmoji.objects
                                 double width_o = Const.FontSize + 6;
                                 double height_o = Const.FontSize + 6;
 
-                                var di = new DrawingImage(Emoji.Wpf.Image.RenderEmoji(match.Value, out width_o, out height_o));
+                                var di = new DrawingImage(Emoji.Wpf2.Image.RenderEmoji(match.Value, out width_o, out height_o));
                                 di.Freeze();
                                 Rect imageRect = new Rect(point, new Size(Const.FontSize + 6, Const.FontSize + 6));
                                 dc.DrawImage(di, imageRect);
@@ -340,7 +330,14 @@ namespace TextEmoji.objects
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
+            // Start selection mode
             startSelected = true;
+
+            // Capture mouse events
+            //this.CaptureMouse();
+
+
+            // Get focus to enable the keydown
             this.Focus();
 
             // Get mouse position
@@ -359,7 +356,7 @@ namespace TextEmoji.objects
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
-            startSelected = false;
+            removeMouseCapture();
 
             // Get mouse position
             Point p = e.GetPosition(this);
@@ -439,6 +436,12 @@ namespace TextEmoji.objects
             base.OnMouseMove(e);
         }
 
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+        {
+            removeMouseCapture();
+            base.OnLostMouseCapture(e);
+        }
+
 
         protected void OnKeyDown(object sender, KeyEventArgs e)
         {
@@ -448,7 +451,7 @@ namespace TextEmoji.objects
                 selectedText = mainTextSource.GetSelectedText();
                 if (!selectedText.Equals(""))
                 {
-                    Clipboard.SetText(selectedText);
+                    //Clipboard.SetText(selectedText);
                     if (parent != null) parent.CopyText(selectedText);
                     e.Handled = true;
                 }
