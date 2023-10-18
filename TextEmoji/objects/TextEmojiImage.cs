@@ -209,7 +209,7 @@ namespace TextEmoji.objects
         private CharacterHit GetCharacterFromPoint(Point point)
         {
             // Get line position
-            int index = Math.Max(((int)(point.Y) + (int)Const.FontSize) / (int)Const.FontSize - 1, 0);
+            int index = Math.Max(((int)(point.Y) + (int)Const.LineHeight) / (int)Const.LineHeight - 1, 0);
             if (index >= textIntegers.Count) return new CharacterHit(mainTextSource.Text.Length - 1, 0);
 
             int storePosition = textIntegers[index];
@@ -316,12 +316,12 @@ namespace TextEmoji.objects
                                 double distance = line.GetDistanceFromCharacterHit(new CharacterHit(match.Index, 0));
                                 Point point = new(distance - 2, linePosition.Y - line.Height - 4);
 
-                                double width_o = Const.FontSize + 6;
-                                double height_o = Const.FontSize + 6;
+                                double width_o = Const.LineHeight + 6;
+                                double height_o = Const.LineHeight + 6;
 
                                 var di = new DrawingImage(Emoji.Wpf2.Image.RenderEmoji(match.Value, out width_o, out height_o));
                                 di.Freeze();
-                                Rect imageRect = new Rect(point, new Size(Const.FontSize + 6, Const.FontSize + 6));
+                                Rect imageRect = new Rect(point, new Size(Const.LineHeight + 6, Const.LineHeight + 6));
                                 dc.DrawImage(di, imageRect);
                             }
                         }
