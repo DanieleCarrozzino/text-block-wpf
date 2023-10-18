@@ -44,7 +44,7 @@ namespace TextEmoji
             LineSpacing = 6.0; // Set the default line spacing.
             FlowDirection = FlowDirection.LeftToRight; // Set the default flow direction.
             Indent = 0; // Set the default indentation.
-            LineHeight = Const.FontSize; // Set the default line height.
+            LineHeight = custom.Typeface.FontFamily.LineSpacing * Const.FontSize; // Set the default line height.
 
 
             TextDecoration textDecoration = new TextDecoration

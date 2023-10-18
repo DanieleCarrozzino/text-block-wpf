@@ -59,8 +59,8 @@ namespace TextEmoji
 
             }
 
-            Typeface = new Typeface("Arial");
-            FontRenderingEmSize = 16;
+            Typeface = new Typeface("Segoe UI");
+            FontRenderingEmSize = Const.FontSize;
         }
 
 
