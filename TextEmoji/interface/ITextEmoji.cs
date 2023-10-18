@@ -29,6 +29,14 @@ namespace TextEmoji.@interface
         public void rightLinkClicked(string link, MouseButtonEventArgs e);
 
         /// <summary>
+        /// Events to handle inside the parent,
+        /// a selected text is been clicked
+        /// </summary>
+        /// <param name="selectedText"></param>
+        /// <param name="coordinate"></param>
+        public void rightMouseClickWithTextSelected(string selectedText, MouseButtonEventArgs e);
+
+        /// <summary>
         /// Resize container 
         /// </summary>
         /// <param name="width"></param>

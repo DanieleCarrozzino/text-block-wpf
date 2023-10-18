@@ -22,3 +22,5 @@ C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows\TextEmoji_MarkupCompile.lref
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows\usercontrols\LinkDialog.baml
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows\TextEmoji.g.resources
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows\usercontrols\TextDialog.g.cs
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows\usercontrols\TextDialog.baml

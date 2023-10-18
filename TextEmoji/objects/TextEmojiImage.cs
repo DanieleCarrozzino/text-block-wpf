@@ -1,5 +1,6 @@
 ﻿using Emoji.Wpf2;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -67,6 +68,7 @@ namespace TextEmoji.objects
         //------------
         public event Action<string> LinkClicked;
         public event Action<string, MouseButtonEventArgs> RightLinkClicked;
+        public event Action<string, MouseButtonEventArgs> RightTextSelectedClicked;
         public event Action<string> SelectedChanged;
 
         public TextEmojiImage()
@@ -186,6 +188,16 @@ namespace TextEmoji.objects
         {
             if (parent != null) parent.rightLinkClicked(mainTextSource.Text.Substring(start, length), e);
             else RightLinkClicked?.Invoke(mainTextSource.Text.Substring(start, length), e);
+        }
+
+        /// <summary>
+        /// Right click with a selected text
+        /// </summary>
+        /// <param name="selectedText"></param>
+        private void rightMouseClickWithSelectedText(string selectedText, MouseButtonEventArgs e)
+        {
+            if (parent != null) parent.rightMouseClickWithTextSelected(selectedText, e);
+            else RightTextSelectedClicked?.Invoke(selectedText, e);
         }
 
         private void selectedChanged(string text)
@@ -414,8 +426,14 @@ namespace TextEmoji.objects
                     {
                         rightclickLink(match.Index, match.Length, e);
                         e.Handled = true;
+                        return;
                     }
                 }
+            }
+            if (!string.IsNullOrEmpty(mainTextSource.GetSelectedText()))
+            {
+                rightMouseClickWithSelectedText(mainTextSource.GetSelectedText(), e);
+                e.Handled = true;
             }
 
             base.OnMouseRightButtonUp(e);

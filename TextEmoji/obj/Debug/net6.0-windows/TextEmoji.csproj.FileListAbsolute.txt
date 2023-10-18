@@ -22,3 +22,5 @@ C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Debug\net6.0-windows\T
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Debug\net6.0-windows\refint\TextEmoji.dll
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Debug\net6.0-windows\TextEmoji.pdb
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Debug\net6.0-windows\ref\TextEmoji.dll
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Debug\net6.0-windows\usercontrols\TextDialog.g.cs
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Debug\net6.0-windows\usercontrols\TextDialog.baml

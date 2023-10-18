@@ -18,6 +18,7 @@ namespace TextEmoji.objects
         private TextEmojiImage image    = null;
         public event Action<string> LinkClicked;
         public event Action<string, MouseButtonEventArgs> RightLinkClicked;
+        public event Action<string, MouseButtonEventArgs> RightTextSelectedClicked;
         public event Action<Size>   SizeChildrenChanged;
         public event Action<string> SelectedChanged;
         public event Action<string> CopyTextAction;
@@ -144,6 +145,17 @@ namespace TextEmoji.objects
         {
             RightLinkClicked?.Invoke(link, e);
             var dialog = new LinkDialog(CopyLinkAction, OpenLinkAction, link);
+            Utility.OpenPopupLinkMenu(this, e.GetPosition(this), dialog);
+        }
+
+        /// <summary>
+        /// Right mouse event click on a selected text
+        /// </summary>
+        /// <param name="selectedText"></param>
+        public void rightMouseClickWithTextSelected(string selectedText, MouseButtonEventArgs e)
+        {
+            RightTextSelectedClicked?.Invoke(selectedText, e);
+            var dialog = new TextDialog(selectedText);
             Utility.OpenPopupLinkMenu(this, e.GetPosition(this), dialog);
         }
 
