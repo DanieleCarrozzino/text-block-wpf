@@ -31,10 +31,10 @@ namespace Demo
 
             List<string> stringList = new List<string>
             {
-                "Item 1 swkdj vljwhb www.google.it vljhewb dlkvcn welvn dfwb vlkjewvbw vjdnkw vf",
-                "Item 2lqjw dckj hewcjh e",
-                "Item 3òsdj vòkwje vòkjw evj wlfje voi2hubevhjb we hklfvlk3erhvlhrlewf vhnlrjewh pv hewrlvjhnlrj lk re",
-                "Item 4wl dfkvòlkw jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerlj"
+                "Item 1 swkdj vljwhb www.google.it vljhewb dlkvcn welvn dfwb vlkjewvbw 🥗🧻vjdnkw vf",
+                "Item 2lqjw dc👍kj hewcjh e",
+                "Item 3òsdj vòkwje vòkjw evj wlfje🥲👩🏻‍🎨 voi2hubevhjb we hklfvlk3erhvlhrlewf vhnlrjewh pv hewrlvjhnlrj lk re",
+                "Item 4wl dfkvòlkw🥰 jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerlj"
             };
 
             list.ItemsSource = stringList;
@@ -44,7 +44,7 @@ namespace Demo
         {
             get
             {
-                return "Item 4wl dfkvòlkw jòflv òewrl òew rò ròlj www.google.it  vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerljItem 4wl dfkvòlkw jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerlj";
+                return "Item 4wl dfkvòlkw jòflv òvòkwje vòkjw evj wlfje\U0001f972vòkwje vòkjw evj wlfje\U0001f972vòkwje vòk www.google.it jw evj wlfje\U0001f972 ewrl òew rò ròlj www.google.it  vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl r www.google.it jwòlbg jrwòl bgkjòerljItem 4wl dfkvòlkw jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl new www.google.it ròlkjb òl rjwòlbg jrwòl bgkjòerlj";
             }
         }
 

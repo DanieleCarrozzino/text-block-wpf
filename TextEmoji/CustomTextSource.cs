@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Text.RegularExpressions;
 using System.Windows.Documents;
 using System.Security.Permissions;
+using System.Diagnostics;
 
 namespace TextEmoji
 {
@@ -73,142 +74,97 @@ namespace TextEmoji
         /// <param name="list">tuple of index and length</param>
         public CustomTextSource(string text, List<(int, int, int)> list)
         {
-            // Genero il both in base alla selezione
-            // e la presenza di link
+            // Clear link list
+            positionLink = list.Where(item => item.Item3 == (int)TYPE.LINK).ToHashSet();
 
-            // es. 
-            // item1(10, 5,  0)
-            // item2(19, 20, 0)
-            // item3(24, 35, 1)
-            //
-            // item1(10, 5,  0)
-            // item2(19, 20, 0)
-            // item3(24, 3,  1)
-            //
-            // In questo caso l'item 3 è la selezione
-            // e sta coprendo parte del link di item2
-            //
-            // tra l'index 24 con lunghezza 16 dovrà comparire 
-            // un ulteriore item con type 2 == BOTH
-            //
-            //
-            // ciclo sulla lista alla ricerca della selezione
-            // salvandomi l'item precedente e nel caso la selezione
-            // sia sopra a un link spezzo la selezione in 2 item e 
-            // diminuisco la lunghezza del link precedente
+            // Get the selection item
+            // from the list
+            var selectedItem = list.Find(item => item.Item3 == (int)TYPE.SELECTION);
+            list.Remove(selectedItem);
 
-            int i = 0;
-            (int, int, int) previous = (-1, -1, -1);
-            (int, int, int) next     = (-1, -1, -1);
-
-            foreach ((int item1, int item2, int item3) in list)
+            foreach ((int index, int length, int type) in list)
             {
-                // Get the next value inside the list
-                if (i < list.Count - 1)
+
+                // skip the selected item
+                //if (index == selectedItem.Item1 && selectedItem.Item2 == length && selectedItem.Item3 == type) continue;
+
+                // I keep only the items that 
+                // are finished inside the selected
+                // range
+                if (/*the first part is inside*/
+                    (index > selectedItem.Item1 && index < selectedItem.Item1 + selectedItem.Item2) ||
+                    /*the last part is inside*/
+                    (index + length > selectedItem.Item1 && index + length < selectedItem.Item1 + selectedItem.Item2) ||
+                    /*is totally inside*/
+                    (index > selectedItem.Item1 && index + length < selectedItem.Item1 + selectedItem.Item2)
+                    )
                 {
-                    next = list[i + 1];
-                }
-                else next = (-1, -1, -1);
-
-                // Trovo la selezione
-                // e controllo che non si
-                // sovrapponga
-                if (item3 == (int)TYPE.SELECTION)
-                {
-                    if (previous.Item1 + previous.Item2 > item1)
+                    // This item is in part or totally inside the selection range
+                    // On first condition I only remove the share part from the selection range 
+                    if((index > selectedItem.Item1 && index + length > selectedItem.Item1 + selectedItem.Item2))
                     {
-                        // Si sovrappone
+                        Trace.WriteLine("\n************");
+                        Trace.WriteLine("1 ind " + index);
+                        Trace.WriteLine("1 it1 " + selectedItem.Item1);
+                        Trace.WriteLine("1 it2 " + selectedItem.Item2);
+                        Trace.WriteLine("************\n");
 
-                        // Modifico quello precedente
-                        positionList.Remove(previous);
-                        positionList.Add((previous.Item1, item1 - previous.Item1 - 1, previous.Item3));
+                        var item_to_add     = (index, selectedItem.Item1 + selectedItem.Item2 - index, (int)TYPE.BOTH);
+                        var item_modify     = (selectedItem.Item1 + selectedItem.Item2, index + length - (selectedItem.Item1 + selectedItem.Item2), type);
+                        selectedItem.Item2  = index - selectedItem.Item1;
 
-                        // Aggiungo il both
-                        var length = Math.Min((previous.Item1 + previous.Item2) - item1, item2);
-                        positionList.Add((item1, length, (int)TYPE.BOTH));
+                        Trace.WriteLine("\n************");
+                        Trace.WriteLine("1 add " + item_to_add.ToString());
+                        Trace.WriteLine("1 mod " + item_modify.ToString());
+                        Trace.WriteLine("************\n");
 
-                        // Aggiungo il selected se ne è avanzato
-                        if(item2 > length)
-                        {
-                            // prendendo l'esempio di prima
-                            // in questo caso avremo.
-                            //
-                            // item1(10, 5,  0)
-                            // item2(19, 5,  0)
-                            // item3(24, 15, 2)
-                            // item4(39, 24, 1)
-                            //
-                            // io devo aggiungere l'item 4
-                            var new_select_index = item1 + length;
-                            var new_select_length = item2 - length;
-                            positionList.Add((new_select_index, new_select_length, (int)TYPE.SELECTION));
-                        }
-                        else
-                        {
-                            //TODO altrimenti aggiungo il link
-                        }
-                    }
-                    else if (item1 + item2 >= next.Item1 && next.Item1 >= 0)
-                    {
-                        // In questo caso la selezione è sovrapposta
-                        // a un elemento successivo all'interno
-                        // della lista
-                        //
-                        // Devo andare a disegnare la selection dallo
-                        // start di questo elemento fino allo start
-                        // dell'elemento successivo
-                        //
-                        // TODO nel caso lo racchiudi del tutto
-                        positionList.Add((item1 - 1, next.Item1 - item1, (int)TYPE.SELECTION));
-
-                        // Adesso disgeno il both venutosi a creare
-                        // tra il next e l'attuale
-                        // considero se la selezione racchiude tutto 
-                        // il link
-
-                        int length = Math.Min( next.Item2, (item1 + item2) - next.Item1 );
-                        positionList.Add((next.Item1, length, (int)TYPE.BOTH));
-
-                        // Nel caso sia avanzato qualcosa dalla sovrapposizione
-                        // disegno il link rimanente con i valori di next
-                        if(length < next.Item2)
-                        {
-                            // In questo caso devo aggiungere il link 
-                            // partendo dalla fine del both
-                            // quindi start = next.item1 + length
-                            // e lunghezza prendo la lunghezza di next
-                            // e ci tolgo la differenza tra lo start di next e 
-                            // la nuova start
-                            positionList.Add((next.Item1 + length, next.Item2 - length, (int)TYPE.LINK));
-                        }
-                        else
-                        {
-                            // devo aggiungere la selection 
-                            // rimanente
-                            // lo start è da next.Item1 + length
-                            // la lunghezza :
-                            // prendo la fine di quella attuale cioè: item1 + item2
-                            // e rimuovere la posizione finale di quello precedente
-                            positionList.Add((next.Item1 + length, (item1 + item2) - (next.Item1 + length), (int)TYPE.SELECTION));
-                        }
+                        positionList.Add(item_to_add);
+                        positionList.Add(item_modify);
 
                     }
-                    else 
+                    else if (index + length > selectedItem.Item1 && index < selectedItem.Item1)
                     {
-                        positionList.Add((item1, item2, item3));
+                        var item_modify = (index, selectedItem.Item1 - index, type);
+                        var item_to_add = (selectedItem.Item1, index + length - selectedItem.Item1, (int)TYPE.BOTH);
+                        Trace.WriteLine("2 add " + item_to_add.ToString());
+                        Trace.WriteLine("2 mod " + item_modify.ToString());
+
+                        selectedItem.Item1 = index + length;
+                        selectedItem.Item2 = selectedItem.Item2 - item_to_add.Item2;                     
+
+                        positionList.Add(item_to_add);
+                        positionList.Add(item_modify);
+                    }
+                    else
+                    {
+                        // It's completly inside
+                        // I have to split
+                        // the selection range and take
+                        // only the left part of the selection
+                        // for the future comparison
+
+                        //first part of the selection
+                        var first_sel = (selectedItem.Item1, index - selectedItem.Item1, (int)TYPE.SELECTION);
+
+                        //both element
+                        var item_to_add = (index, length, (int)TYPE.BOTH);
+
+                        //last part of the selection
+                        selectedItem = (index + length, selectedItem.Item2 - (index + length), (int)TYPE.SELECTION);
+
+                        positionList.Add(item_to_add);
+                        positionList.Add(first_sel);
                     }
                 }
                 else
-                {
-                    positionList.Add((item1, item2, item3));
-                }
-                previous = (item1, item2, item3);
-                i++;
+                    positionList.Add((index, length, type));
             }
 
-            positionList = positionList.ToList().OrderBy(item => item.Item1).ToHashSet();
-            positionLink = positionList.Where(item => item.Item3 == (int)TYPE.LINK).ToHashSet();
-            Text = text;
+            positionList.Add(selectedItem);
+            positionList    = positionList.ToList().OrderBy(item => item.Item1).ToHashSet();
+
+            Trace.WriteLine(selectedItem.ToString());
+            Text            = text;
         }
 
         public override TextRun GetTextRun(int textSourceCharacterIndex)
@@ -303,7 +259,6 @@ namespace TextEmoji
                                                     Text.Length - textSourceCharacterIndex, new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR));
             }
 
-            // Ho finito di gestire i link
             return new TextEndOfParagraph(1);
         }
 

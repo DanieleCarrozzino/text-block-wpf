@@ -27,7 +27,7 @@ namespace TextEmoji.objects
 
         public TextEmoji()
         {
-            SizeChanged += TextEmoji_SizeChanged;
+            //SizeChanged += TextEmoji_SizeChanged;
             HorizontalAlignment = HorizontalAlignment.Stretch;
         }
 

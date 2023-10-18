@@ -48,7 +48,8 @@ namespace TextEmoji
                         TextDecorationUnit.FontRecommended,
                         TextDecorationUnit.FontRecommended));
                     ForegroundBrush = Utility.GetSelectionBrushColor("#0073e6");
-                    BackgroundBrush = Utility.GetSelectionBrushColor("#e6f2ff");
+                    //BackgroundBrush = Utility.GetSelectionBrushColor("#e6f2ff");
+                    BackgroundBrush = Utility.GetSelectionBrushColor("#66ff0000");
                     break;
                 case STYLE.CLEAR:
                     BackgroundBrush = Brushes.Transparent;
