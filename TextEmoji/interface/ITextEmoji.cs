@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace TextEmoji.@interface
 {
@@ -23,7 +25,8 @@ namespace TextEmoji.@interface
         /// mouse button
         /// </summary>
         /// <param name="link"></param>
-        public void rightLinkClicked(string link);
+        /// <param name="coordinate"></param>
+        public void rightLinkClicked(string link, MouseButtonEventArgs e);
 
         /// <summary>
         /// Resize container 

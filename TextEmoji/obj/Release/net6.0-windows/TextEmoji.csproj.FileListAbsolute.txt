@@ -17,3 +17,8 @@ C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\bin\Release\net6.0-windows\Lib\Stfu.dll
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\bin\Release\net6.0-windows\Lib\Emoji.Wpf2.dll
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\bin\Release\net6.0-windows\Emoji.Wpf2.dll
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows\usercontrols\LinkDialog.g.cs
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows\TextEmoji_MarkupCompile.cache
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows\TextEmoji_MarkupCompile.lref
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows\usercontrols\LinkDialog.baml
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\TextEmoji\obj\Release\net6.0-windows\TextEmoji.g.resources

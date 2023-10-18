@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TextEmoji.objects;
+using TextEmoji.usercontrols;
 
 namespace Demo
 {
@@ -30,7 +31,7 @@ namespace Demo
 
             List<string> stringList = new List<string>
             {
-                "Item 1 swkdj vljwhb vljhewb dlkvcn welvn dfwb vlkjewvbw vjdnkw vf",
+                "Item 1 swkdj vljwhb www.google.it vljhewb dlkvcn welvn dfwb vlkjewvbw vjdnkw vf",
                 "Item 2lqjw dckj hewcjh e",
                 "Item 3òsdj vòkwje vòkjw evj wlfje voi2hubevhjb we hklfvlk3erhvlhrlewf vhnlrjewh pv hewrlvjhnlrj lk re",
                 "Item 4wl dfkvòlkw jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerlj"
@@ -43,7 +44,7 @@ namespace Demo
         {
             get
             {
-                return "Item 4wl dfkvòlkw jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerljItem 4wl dfkvòlkw jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerlj";
+                return "Item 4wl dfkvòlkw jòflv òewrl òew rò ròlj www.google.it  vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerljItem 4wl dfkvòlkw jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerlj";
             }
         }
 
@@ -62,9 +63,13 @@ namespace Demo
             System.Console.WriteLine(selectedText);
         }
 
-        private void TextEmoji_RightLinkClicked(string obj)
+        private void TextEmoji_RightLinkClicked(string obj, MouseButtonEventArgs e)
         {
+            /*Point p = e.GetPosition(this);
+            var userControl = new LinkDialog();
+            userControl.Margin = new Thickness(p.X, p.Y, 0, 0);
 
+            mainGrid.Children.Add(userControl);*/
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -28,3 +28,7 @@ C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\Demo\bin\Release\net6.0-windows\Stfu
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\Demo\bin\Release\net6.0-windows\Lib\Stfu.dll
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\Demo\bin\Release\net6.0-windows\Lib\Emoji.Wpf2.dll
 C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\Demo\bin\Release\net6.0-windows\Emoji.Wpf2.dll
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\Demo\bin\Release\net6.0-windows\Microsoft.Win32.SystemEvents.dll
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\Demo\bin\Release\net6.0-windows\System.Drawing.Common.dll
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\Demo\bin\Release\net6.0-windows\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\em-hp2\Desktop\Works\wpf\TextEmoji\Demo\bin\Release\net6.0-windows\runtimes\win\lib\net6.0\System.Drawing.Common.dll

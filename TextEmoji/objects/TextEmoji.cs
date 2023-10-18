@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using TextEmoji.@interface;
+using TextEmoji.usercontrols;
 
 namespace TextEmoji.objects
 {
@@ -15,10 +17,12 @@ namespace TextEmoji.objects
         private Manager manager = Manager.GetInstance();
         private TextEmojiImage image    = null;
         public event Action<string> LinkClicked;
-        public event Action<string> RightLinkClicked;
+        public event Action<string, MouseButtonEventArgs> RightLinkClicked;
         public event Action<Size>   SizeChildrenChanged;
         public event Action<string> SelectedChanged;
         public event Action<string> CopyTextAction;
+        public event Action<string> CopyLinkAction;
+        public event Action<string> OpenLinkAction;
 
         public TextEmoji()
         {
@@ -136,9 +140,11 @@ namespace TextEmoji.objects
         /// Right mouse event click on a link
         /// </summary>
         /// <param name="link"></param>
-        public void rightLinkClicked(string link)
+        public void rightLinkClicked(string link, MouseButtonEventArgs e)
         {
-            RightLinkClicked?.Invoke(link);
+            RightLinkClicked?.Invoke(link, e);
+            var dialog = new LinkDialog(CopyLinkAction, OpenLinkAction, link);
+            Utility.OpenPopupLinkMenu(this, e.GetPosition(this), dialog);
         }
 
         /// <summary>

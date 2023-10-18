@@ -10,6 +10,7 @@
     <None Remove="Lib\Emoji.Wpf.dll" />
     <None Remove="Lib\Emoji.Wpf2.dll" />
     <None Remove="Lib\Stfu.dll" />
+    <None Remove="resources\copy.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +20,13 @@
     <EmbeddedResource Include="Lib\Stfu.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Resource Include="resources\copy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

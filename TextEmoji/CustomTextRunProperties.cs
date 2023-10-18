@@ -21,43 +21,34 @@ namespace TextEmoji
             CLEAR,
         }
 
-        private static SolidColorBrush GetSelectionBrushColor(string hexColor)
-        {
-            SolidColorBrush backgroundBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(hexColor));
-            backgroundBrush.Freeze();
-
-            return backgroundBrush;
-        }
-
-
         public CustomTextRunProperties(STYLE style)
         {
             switch (style)
             {
                 case STYLE.HIGHLIGHT:
                     TextDecorations = new TextDecorationCollection();
-                    Pen underlinePen = new Pen(GetSelectionBrushColor("#0073e6"), 2);
+                    Pen underlinePen = new Pen(Utility.GetSelectionBrushColor("#0073e6"), 2);
                     TextDecorations.Add(new TextDecoration(
                         TextDecorationLocation.Underline, 
                         underlinePen, 1, 
                         TextDecorationUnit.FontRecommended, 
                         TextDecorationUnit.FontRecommended));
-                    ForegroundBrush = GetSelectionBrushColor("#0073e6");
+                    ForegroundBrush = Utility.GetSelectionBrushColor("#0073e6");
                     break;
                 case STYLE.SELECTED:
-                    BackgroundBrush = GetSelectionBrushColor("#b3d9ff");
+                    BackgroundBrush = Utility.GetSelectionBrushColor("#b3d9ff");
                     ForegroundBrush = Brushes.Black;
                     break;
                 case STYLE.BOTH:
                     TextDecorations = new TextDecorationCollection();
-                    underlinePen = new Pen(GetSelectionBrushColor("#0073e6"), 2);
+                    underlinePen = new Pen(Utility.GetSelectionBrushColor("#0073e6"), 2);
                     TextDecorations.Add(new TextDecoration(
                         TextDecorationLocation.Underline,
                         underlinePen, 1,
                         TextDecorationUnit.FontRecommended,
                         TextDecorationUnit.FontRecommended));
-                    ForegroundBrush = GetSelectionBrushColor("#0073e6");
-                    BackgroundBrush = GetSelectionBrushColor("#e6f2ff");
+                    ForegroundBrush = Utility.GetSelectionBrushColor("#0073e6");
+                    BackgroundBrush = Utility.GetSelectionBrushColor("#e6f2ff");
                     break;
                 case STYLE.CLEAR:
                     BackgroundBrush = Brushes.Transparent;

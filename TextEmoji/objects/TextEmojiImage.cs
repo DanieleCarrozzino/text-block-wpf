@@ -66,7 +66,7 @@ namespace TextEmoji.objects
         //
         //------------
         public event Action<string> LinkClicked;
-        public event Action<string> RightLinkClicked;
+        public event Action<string, MouseButtonEventArgs> RightLinkClicked;
         public event Action<string> SelectedChanged;
 
         public TextEmojiImage()
@@ -129,7 +129,7 @@ namespace TextEmoji.objects
         {
             initilized = true;
             emojiCollection = EmojiData.MatchOne.Matches(text);
-            linkMatches = Utiltity.CheckValidUrl(text);
+            linkMatches = Utility.CheckValidUrl(text);
             HighLightText();
 
             MouseUp += OnMouseUp;
@@ -182,10 +182,10 @@ namespace TextEmoji.objects
         /// </summary>
         /// <param name="start"></param>
         /// <param name="length"></param>
-        private void rightclickLink(int start, int length)
+        private void rightclickLink(int start, int length, MouseButtonEventArgs e)
         {
-            if (parent != null) parent.rightLinkClicked(mainTextSource.Text.Substring(start, length));
-            else RightLinkClicked?.Invoke(mainTextSource.Text.Substring(start, length));
+            if (parent != null) parent.rightLinkClicked(mainTextSource.Text.Substring(start, length), e);
+            else RightLinkClicked?.Invoke(mainTextSource.Text.Substring(start, length), e);
         }
 
         private void selectedChanged(string text)
@@ -334,7 +334,7 @@ namespace TextEmoji.objects
             startSelected = true;
 
             // Capture mouse events
-            //this.CaptureMouse();
+            this.CaptureMouse();
 
 
             // Get focus to enable the keydown
@@ -351,7 +351,8 @@ namespace TextEmoji.objects
             if (parent != null)
                 parent.CleanLastImage();
 
-            base.OnMouseLeftButtonDown(e);
+            // To capture the mouse
+            e.Handled = true;
         }
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
@@ -411,7 +412,8 @@ namespace TextEmoji.objects
                     if (character.FirstCharacterIndex >= match.Index &&
                         character.FirstCharacterIndex <= match.Index + match.Length)
                     {
-                        rightclickLink(match.Index, match.Length);
+                        rightclickLink(match.Index, match.Length, e);
+                        e.Handled = true;
                     }
                 }
             }

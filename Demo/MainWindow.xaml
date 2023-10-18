@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         SizeChanged="Window_SizeChanged"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid
+        Name="mainGrid">
 
         <Grid.RowDefinitions>
 
@@ -43,6 +44,7 @@
             Text="{Binding text}"
             Background="AliceBlue"     
             SizeContainer="{Binding Path=Size}"
+            RightLinkClicked="TextEmoji_RightLinkClicked"
             />
 
     </Grid>
