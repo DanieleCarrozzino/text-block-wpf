@@ -466,10 +466,6 @@ namespace TextEmoji.objects
             // Capture mouse events
             this.CaptureMouse();
 
-            // Get focus to enable the keydown
-            Keyboard.Focus(this);
-            this.Focus();
-
             // Get mouse position
             Point p = Mouse.GetPosition(this);
 
@@ -493,7 +489,6 @@ namespace TextEmoji.objects
 
             // Get the first Character info
             (lastCharacter, lastPoint) = GetCharacterFromPoint(p);
-            //lastPoint = p;
 
             // if first is eqaul to the last one character
             // I perform a link click if it's a match
@@ -516,6 +511,10 @@ namespace TextEmoji.objects
             // Draw single highlight
             else
             {
+                // to receive copy keyboard command
+                Keyboard.Focus(this);
+
+                // re draw the ihighlight text
                 var indexes     = drawHighlightTextFromFirstCharacterToTheLastOne();
                 selectedText    = mainTextSource.Text.Substring(indexes.Item1, indexes.Item2 + 1);
                 selectedChanged(selectedText);
