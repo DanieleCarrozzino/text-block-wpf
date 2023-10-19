@@ -48,7 +48,7 @@ namespace TextEmoji
 
         private void initLibrary()
         {
-            try
+            /*try
             {
                 string exePath = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
                 string dllPath = Path.Combine(exePath, "Lib", "Emoji.Wpf2.dll");
@@ -59,7 +59,7 @@ namespace TextEmoji
             }
             catch (Exception ex)
             {
-            }
+            }*/
         }
 
     }

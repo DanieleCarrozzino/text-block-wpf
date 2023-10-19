@@ -181,7 +181,6 @@ namespace TextEmoji
                 return new TextEndOfParagraph(1);
             }
 
-
             // Create and return a TextCharacters object, which is formatted according to
             // the current layout and rendering properties.
             if (textSourceCharacterIndex < Text.Length)
@@ -193,7 +192,6 @@ namespace TextEmoji
                 }
                 return new TextCharacters(Text, textSourceCharacterIndex,
                                                     Text.Length - textSourceCharacterIndex, new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR));
-
             }
 
             // Return an end-of-paragraph indicator if there is no more text source.
