@@ -378,7 +378,7 @@ namespace TextEmoji.objects
 
                         foreach (Match match in emojiCollection)
                         {
-                            if (textSourcePosition - line.Length < match.Index && textSourcePosition > match.Index)
+                            if (textSourcePosition - line.Length <= match.Index && textSourcePosition > match.Index)
                             {
                                 double distance = line.GetDistanceFromCharacterHit(new CharacterHit(match.Index, 0));
                                 Point point = new(distance - 2, linePosition.Y - line.Height - 4);
