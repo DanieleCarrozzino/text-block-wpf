@@ -1,4 +1,4 @@
-﻿using Emoji.Wpf2;
+﻿using Emoji.Wpf;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -384,7 +384,7 @@ namespace TextEmoji.objects
                                 double width_o = Const.LineHeight + 6;
                                 double height_o = Const.LineHeight + 6;
 
-                                var di = new DrawingImage(Emoji.Wpf2.Image.RenderEmoji(match.Value, out width_o, out height_o));
+                                var di = new DrawingImage(Emoji.Wpf.Image.RenderEmoji(match.Value, out width_o, out height_o));
                                 di.Freeze();
                                 Rect imageRect = new Rect(point, new Size(Const.LineHeight + 6, Const.LineHeight + 6));
                                 dc.DrawImage(di, imageRect);

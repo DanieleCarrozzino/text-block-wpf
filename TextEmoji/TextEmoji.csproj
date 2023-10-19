@@ -8,13 +8,12 @@
 
   <ItemGroup>
     <None Remove="Lib\Emoji.Wpf.dll" />
-    <None Remove="Lib\Emoji.Wpf2.dll" />
     <None Remove="Lib\Stfu.dll" />
     <None Remove="resources\copy.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Lib\Emoji.Wpf2.dll">
+    <EmbeddedResource Include="Lib\Emoji.Wpf.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Lib\Stfu.dll">
@@ -30,9 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Emoji.Wpf2">
-      <HintPath>Lib\Emoji.Wpf2.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Emoji.Wpf">
+      <HintPath>..\..\..\emoji.wpf\Emoji.Wpf\bin\Release\netcoreapp3.1\Emoji.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Stfu">
       <HintPath>Lib\Stfu.dll</HintPath>
