@@ -78,6 +78,7 @@ namespace TextEmoji.objects
 
         public TextEmojiImage()
         {
+            this.Focusable      = true;
             Visibility          = Visibility.Collapsed;
             callFromXaml        = true;
             HorizontalAlignment = HorizontalAlignment.Left;
@@ -86,6 +87,7 @@ namespace TextEmoji.objects
 
         public TextEmojiImage(string text, ITextEmoji parent)
         {
+            this.Focusable      = true;
             Visibility          = Visibility.Collapsed;
             Text                = text;
             callFromXaml        = false;
