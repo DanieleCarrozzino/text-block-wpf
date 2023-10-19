@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -44,6 +45,8 @@ namespace TextEmoji.objects
         // Info point of first and last mouse click
         private Point firstPoint;
         private Point lastPoint;
+        private Point newLastPoint;
+        private Point newFirstPoint;
 
         // Define the selection mode
         private bool startSelected = false;
@@ -236,28 +239,42 @@ namespace TextEmoji.objects
             {
                 highList.Add((match.Index, match.Length, (int)CustomTextSource.TYPE.LINK));
             }
+
             mainTextSource = new CustomTextSource(Text, highList);
             this.Visibility = Visibility.Visible;
         }
 
 
 
-        private (int, int) drawHighlightTextFromFirstCharacterToTheLastOne(CharacterHit first, CharacterHit last)
+        private (int, int) drawHighlightTextFromFirstCharacterToTheLastOne()
         {
-            var length = last.FirstCharacterIndex - first.FirstCharacterIndex;
-            var start = first.FirstCharacterIndex;
+            newFirstPoint   = firstPoint;
+            newLastPoint    = lastPoint;
 
-            if (length < 0)
+            if (firstPoint.X > lastPoint.X)
             {
-                start = last.FirstCharacterIndex;
-                var tmp = firstPoint;
-                firstPoint = lastPoint;
-                lastPoint = tmp;
+                var tmp1        = firstCharacter;
+                firstCharacter  = lastCharacter;
+                lastCharacter   = tmp1;
+
+                var tmp         = newFirstPoint;
+                newFirstPoint   = newLastPoint;
+                newLastPoint    = tmp;
             }
 
-            mainTextSource = mainTextSource.AddSelection(start, start + Math.Abs(length));
+            // 
+            /*foreach(Match match in emojiCollection)
+            {
+                if(match.Index == last.FirstCharacterIndex)
+                {
+                    length += match.Length - 1;
+                    break;
+                }
+            }*/
+
+            //mainTextSource = mainTextSource.AddSelection(start, start + Math.Abs(length));
             InvalidateVisual();
-            return (start, Math.Abs(length));
+            return (0, 0);
         }
 
         //*****************
@@ -294,13 +311,61 @@ namespace TextEmoji.objects
 
                         // Define and draw the line
                         textIntegers.Add(textSourcePosition);
+
+
+                        /*****************
+                         * Draw selection
+                         *****************/
+                        // if line contains the start of the selection 
+                        // it means textSourcePosition < firstCharacterPosition
+                        // and textSourcePosition + line.Length > firstCharacterPosition
+                        if(textSourcePosition < firstCharacter.FirstCharacterIndex 
+                            && textSourcePosition + line.Length > firstCharacter.FirstCharacterIndex)
+                        {
+                            double pointx       = Math.Max(newFirstPoint.X, 0);
+                            double width_rect   = line.Width - pointx;
+
+                            // if the line conains also the end of selection
+                            if (lastCharacter.FirstCharacterIndex < textSourcePosition + line.Length)
+                            {
+                                double x = Math.Min(newLastPoint.X, line.Width);
+                                width_rect = Math.Abs(x - pointx);
+                            }
+
+                            Rect rec = new Rect(pointx, linePosition.Y, width_rect, line.Height);
+                            dc.DrawRectangle(Brushes.Orange, null, rec);
+                        }
+                        // If the line contains the end of the selection
+                        // it means lastCharacterPosition > textSourcePosition
+                        // and textSourcePosition + line.Length > lastCharacterPosition
+                        else if (textSourcePosition < lastCharacter.FirstCharacterIndex
+                            && textSourcePosition + line.Length > lastCharacter.FirstCharacterIndex)
+                        {
+                            double pointx = Math.Min(line.Width, lastPoint.X);
+                            Rect rec = new Rect(0, linePosition.Y, pointx, line.Height);
+                            dc.DrawRectangle(Brushes.Orange, null, rec);
+                        }
+                        // The selection contains the entire line
+                        // it means firstCharacterPosition < textSourcePosition
+                        // and lastCharacterPosition > textSourcePosition + line.Length
+                        else if (firstCharacter.FirstCharacterIndex < textSourcePosition
+                            && textSourcePosition + line.Length < lastCharacter.FirstCharacterIndex)
+                        {
+                            Rect rec = new Rect(0, linePosition.Y, line.Width, line.Height);
+                            dc.DrawRectangle(Brushes.Orange, null, rec);
+                        }
+
+
+                        /************
+                         * Draw line
+                         ************/
                         line.Draw(dc, linePosition, InvertAxes.None);
 
                         // define the width of the draw
                         if (line.Width > width) width = (int)line.Width;
 
-                        textSourcePosition += line.Length;
-                        linePosition.Y += line.Height;
+                        textSourcePosition  += line.Length;
+                        linePosition.Y      += line.Height;
 
                         // DRAW EMOJI
                         //
@@ -348,20 +413,19 @@ namespace TextEmoji.objects
             // Capture mouse events
             this.CaptureMouse();
 
-
             // Get focus to enable the keydown
             this.Focus();
 
             // Get mouse position
             Point p = Mouse.GetPosition(this);
 
-            // Get the first Character info
-            firstCharacter = GetCharacterFromPoint(p);
-            firstPoint = p;
-
             // Clean last selection
             if (parent != null)
                 parent.CleanLastImage();
+
+            // Get the first Character info
+            firstCharacter  = GetCharacterFromPoint(p);
+            firstPoint      = p;
 
             // To capture the mouse
             e.Handled = true;
@@ -399,7 +463,7 @@ namespace TextEmoji.objects
             // Draw single highlight
             else
             {
-                var indexes     = drawHighlightTextFromFirstCharacterToTheLastOne(firstCharacter, lastCharacter);
+                var indexes     = drawHighlightTextFromFirstCharacterToTheLastOne();
                 selectedText    = mainTextSource.Text.Substring(indexes.Item1, indexes.Item2 + 1);
                 selectedChanged(selectedText);
             }
@@ -451,7 +515,7 @@ namespace TextEmoji.objects
             lastPoint = p;
 
             // draw
-            drawHighlightTextFromFirstCharacterToTheLastOne(firstCharacter, lastCharacter);
+            drawHighlightTextFromFirstCharacterToTheLastOne();
 
             base.OnMouseMove(e);
         }
@@ -488,8 +552,9 @@ namespace TextEmoji.objects
 
         public void CleanImage()
         {
-            selectedText = "";
-            mainTextSource = mainTextSource.ClearSelection();
+            selectedText    = "";
+            firstCharacter  = new CharacterHit(0, 0);
+            lastCharacter   = new CharacterHit(0, 0);
             InvalidateVisual();
         }
 
