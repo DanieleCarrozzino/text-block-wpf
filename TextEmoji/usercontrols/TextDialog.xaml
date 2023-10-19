@@ -26,7 +26,8 @@
                 Margin="2"
                 Background="White"
                 MouseEnter="Border_MouseEnter"
-                MouseLeave="Border_MouseLeave">
+                MouseLeave="Border_MouseLeave"
+                MouseLeftButtonUp="Border_CopyText">
 
                 <StackPanel
                     Orientation="Horizontal"
@@ -52,7 +53,8 @@
                 Margin="2"
                 Background="White"
                 MouseEnter="Border_MouseEnter"
-                MouseLeave="Border_MouseLeave">
+                MouseLeave="Border_MouseLeave"
+                MouseLeftButtonUp="Border_SearchText">
 
                 <StackPanel
                     Orientation="Horizontal"

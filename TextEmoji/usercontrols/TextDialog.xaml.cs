@@ -20,6 +20,8 @@ namespace TextEmoji.usercontrols
     /// </summary>
     public partial class TextDialog : UserControl
     {
+        private Action<string> copyAction;
+        private Action<string> openAction;
         public string selectedText = "";
         public TextDialog(string selectedText)
         {
@@ -38,6 +40,18 @@ namespace TextEmoji.usercontrols
         private void Border_MouseLeave(object sender, MouseEventArgs e)
         {
             ((Border)sender).Background = System.Windows.Media.Brushes.White;
+        }
+
+        private void Border_SearchText(object sender, MouseButtonEventArgs e)
+        {
+            openAction?.Invoke(selectedText);
+            Utility.ClosePopup();
+        }
+
+        private void Border_CopyText(object sender, MouseButtonEventArgs e)
+        {
+            copyAction?.Invoke(selectedText);
+            Utility.ClosePopup();
         }
     }
 }
