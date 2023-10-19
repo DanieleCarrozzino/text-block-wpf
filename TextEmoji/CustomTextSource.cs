@@ -79,61 +79,62 @@ namespace TextEmoji
 
             // Get the selection item
             // from the list
-            var selectedItem = list.Find(item => item.Item3 == (int)TYPE.SELECTION);
+            var selectedItem  = list.Find(item => item.Item3 == (int)TYPE.SELECTION);
+            var withoutModify = selectedItem;
             list.Remove(selectedItem);
 
             foreach ((int index, int length, int type) in list)
             {
-
-                // skip the selected item
-                //if (index == selectedItem.Item1 && selectedItem.Item2 == length && selectedItem.Item3 == type) continue;
-
                 // I keep only the items that 
                 // are finished inside the selected
                 // range
-                if (/*the first part is inside*/
-                    (index > selectedItem.Item1 && index < selectedItem.Item1 + selectedItem.Item2) ||
+                if (
+                    selectedItem.Item3 == (int)TYPE.SELECTION && (
+                    /*the first part is inside*/
+                    (index >= selectedItem.Item1 && index + length >= selectedItem.Item1 + selectedItem.Item2 && index <= selectedItem.Item1 + selectedItem.Item2) ||
                     /*the last part is inside*/
-                    (index + length > selectedItem.Item1 && index + length < selectedItem.Item1 + selectedItem.Item2) ||
-                    /*is totally inside*/
-                    (index > selectedItem.Item1 && index + length < selectedItem.Item1 + selectedItem.Item2)
+                    (index + length <= selectedItem.Item1 + selectedItem.Item2 && index <= selectedItem.Item1 && index + length >= selectedItem.Item1) ||
+                    /*link is totally inside*/
+                    (index >= selectedItem.Item1 && index + length <= selectedItem.Item1 + selectedItem.Item2) ||
+                    /*selection is totally inside a link*/
+                    (index <= selectedItem.Item1 && index + length > selectedItem.Item1 + selectedItem.Item2))
                     )
                 {
                     // This item is in part or totally inside the selection range
                     // On first condition I only remove the share part from the selection range 
-                    if((index > selectedItem.Item1 && index + length > selectedItem.Item1 + selectedItem.Item2))
+                    if ((index >= selectedItem.Item1 && index + length >= selectedItem.Item1 + selectedItem.Item2 && index <= selectedItem.Item1 + selectedItem.Item2))
                     {
-                        Trace.WriteLine("\n************");
-                        Trace.WriteLine("1 ind " + index);
-                        Trace.WriteLine("1 it1 " + selectedItem.Item1);
-                        Trace.WriteLine("1 it2 " + selectedItem.Item2);
-                        Trace.WriteLine("************\n");
-
-                        var item_to_add     = (index, selectedItem.Item1 + selectedItem.Item2 - index, (int)TYPE.BOTH);
-                        var item_modify     = (selectedItem.Item1 + selectedItem.Item2, index + length - (selectedItem.Item1 + selectedItem.Item2), type);
-                        selectedItem.Item2  = index - selectedItem.Item1;
-
-                        Trace.WriteLine("\n************");
-                        Trace.WriteLine("1 add " + item_to_add.ToString());
-                        Trace.WriteLine("1 mod " + item_modify.ToString());
-                        Trace.WriteLine("************\n");
+                        var item_to_add = (index - 1, selectedItem.Item1 + selectedItem.Item2 - index + 1, (int)TYPE.BOTH);
+                        var item_modify = (selectedItem.Item1 + selectedItem.Item2, index + length - (selectedItem.Item1 + selectedItem.Item2) - 1, type);
+                        selectedItem.Item2 = index - selectedItem.Item1 - 1;
 
                         positionList.Add(item_to_add);
                         positionList.Add(item_modify);
 
                     }
-                    else if (index + length > selectedItem.Item1 && index < selectedItem.Item1)
+                    else if (index + length <= selectedItem.Item1 + selectedItem.Item2 && index <= selectedItem.Item1 && index + length >= selectedItem.Item1)
                     {
-                        var item_modify = (index, selectedItem.Item1 - index, type);
-                        var item_to_add = (selectedItem.Item1, index + length - selectedItem.Item1, (int)TYPE.BOTH);
-                        Trace.WriteLine("2 add " + item_to_add.ToString());
-                        Trace.WriteLine("2 mod " + item_modify.ToString());
+                        var item_modify = (index, selectedItem.Item1 - index - 1, type);
+                        var item_to_add = (selectedItem.Item1 - 1, index + length - selectedItem.Item1, (int)TYPE.BOTH);
 
                         selectedItem.Item1 = index + length;
-                        selectedItem.Item2 = selectedItem.Item2 - item_to_add.Item2;                     
+                        selectedItem.Item2 = selectedItem.Item2 - item_to_add.Item2 - 1;
 
                         positionList.Add(item_to_add);
                         positionList.Add(item_modify);
+                    }
+                    else if ((index <= selectedItem.Item1 && index + length >= selectedItem.Item1 + selectedItem.Item2))
+                    {
+                        // Convert the selection in a Both 
+                        selectedItem.Item3 = (int)TYPE.BOTH;
+                        positionList.Add(selectedItem);
+
+                        // The remains pieces create 2 links
+                        var first_link  = (index, selectedItem.Item1 - index - 1, (int)TYPE.LINK);
+                        var second_link = (selectedItem.Item1 + selectedItem.Item2, (length + index) - (selectedItem.Item1 + selectedItem.Item2), (int)TYPE.LINK);
+
+                        positionList.Add(first_link);
+                        positionList.Add(second_link);
                     }
                     else
                     {
@@ -144,26 +145,27 @@ namespace TextEmoji
                         // for the future comparison
 
                         //first part of the selection
-                        var first_sel = (selectedItem.Item1, index - selectedItem.Item1, (int)TYPE.SELECTION);
+                        var first_sel = (selectedItem.Item1, index - selectedItem.Item1 - 1, (int)TYPE.SELECTION);
 
                         //both element
                         var item_to_add = (index, length, (int)TYPE.BOTH);
 
                         //last part of the selection
-                        selectedItem = (index + length, selectedItem.Item2 - (index + length), (int)TYPE.SELECTION);
+                        selectedItem = (index + length, withoutModify.Item2 + withoutModify.Item1 - (index + length), (int)TYPE.SELECTION);
 
                         positionList.Add(item_to_add);
                         positionList.Add(first_sel);
                     }
                 }
                 else
+                {
                     positionList.Add((index, length, type));
+                }
             }
 
-            positionList.Add(selectedItem);
+            if(selectedItem.Item3 == (int)TYPE.SELECTION)
+                positionList.Add(selectedItem);
             positionList    = positionList.ToList().OrderBy(item => item.Item1).ToHashSet();
-
-            Trace.WriteLine(selectedItem.ToString());
             Text            = text;
         }
 
