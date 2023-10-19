@@ -155,7 +155,7 @@ namespace TextEmoji.objects
         public void rightMouseClickWithTextSelected(string selectedText, MouseButtonEventArgs e)
         {
             RightTextSelectedClicked?.Invoke(selectedText, e);
-            var dialog = new TextDialog(selectedText);
+            var dialog = new TextDialog(CopyLinkAction, OpenLinkAction, selectedText);
             Utility.OpenPopupLinkMenu(this, e.GetPosition(this), dialog);
         }
 

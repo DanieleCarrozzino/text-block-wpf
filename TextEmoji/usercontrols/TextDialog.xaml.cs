@@ -21,10 +21,12 @@ namespace TextEmoji.usercontrols
     public partial class TextDialog : UserControl
     {
         private Action<string> copyAction;
-        private Action<string> openAction;
+        private Action<string> searAction;
         public string selectedText = "";
-        public TextDialog(string selectedText)
+        public TextDialog(Action<string> copyAction, Action<string> searAction, string selectedText)
         {
+            this.searAction = searAction;
+            this.copyAction = copyAction;
             this.selectedText = selectedText;
 
             DataContext = this;
@@ -44,7 +46,7 @@ namespace TextEmoji.usercontrols
 
         private void Border_SearchText(object sender, MouseButtonEventArgs e)
         {
-            openAction?.Invoke(selectedText);
+            searAction?.Invoke(selectedText);
             Utility.ClosePopup();
         }
 
