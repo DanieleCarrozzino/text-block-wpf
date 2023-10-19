@@ -465,6 +465,7 @@ namespace TextEmoji.objects
             this.CaptureMouse();
 
             // Get focus to enable the keydown
+            Keyboard.Focus(this);
             this.Focus();
 
             // Get mouse position
