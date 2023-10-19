@@ -9,8 +9,9 @@ namespace TextEmoji
 {
     internal static class Const
     {
-        public static double FontSize = 20.0;
-        public static double LineHeight = 20.0 * 1.33;
+        public static double FontSize       = 20.0;
+        public static double LineHeight     = 20.0 * 1.33;
+        public static int CornerRect        = 5;
 
         private static String IANA_TOP_LEVEL_DOMAINS =
         "(?:"

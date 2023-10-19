@@ -41,6 +41,8 @@ namespace TextEmoji.objects
         // Info characters on first and last mouse click
         private CharacterHit firstCharacter;
         private CharacterHit lastCharacter;
+        private CharacterHit newFirstCharacter;
+        private CharacterHit newLastCharacter;
 
         // Info point of first and last mouse click
         private Point firstPoint;
@@ -209,11 +211,11 @@ namespace TextEmoji.objects
             else SelectedChanged?.Invoke(text);
         }
 
-        private CharacterHit GetCharacterFromPoint(Point point)
+        private (CharacterHit, Point) GetCharacterFromPoint(Point point)
         {
             // Get line position
             int index = Math.Max(((int)(point.Y) + (int)Const.LineHeight) / (int)Const.LineHeight - 1, 0);
-            if (index >= textIntegers.Count) return new CharacterHit(mainTextSource.Text.Length - 1, 0);
+            if (index >= textIntegers.Count) return (new CharacterHit(mainTextSource.Text.Length - 1, 0), /*TODO resolve this*/new Point(0, 0));
 
             int storePosition = textIntegers[index];
 
@@ -228,7 +230,8 @@ namespace TextEmoji.objects
                         customTextParagraphProperties,
                         null))
             {
-                return line.GetCharacterHitFromDistance(point.X);
+                var hit = line.GetCharacterHitFromDistance(point.X);
+                return (hit, new Point(line.GetDistanceFromCharacterHit(hit), 0));
             }
         }
 
@@ -250,29 +253,18 @@ namespace TextEmoji.objects
         {
             newFirstPoint   = firstPoint;
             newLastPoint    = lastPoint;
+            newFirstCharacter   = firstCharacter;
+            newLastCharacter    = lastCharacter;   
 
-            if (firstPoint.X > lastPoint.X)
+            if (firstCharacter.FirstCharacterIndex > lastCharacter.FirstCharacterIndex)
             {
-                var tmp1        = firstCharacter;
-                firstCharacter  = lastCharacter;
-                lastCharacter   = tmp1;
+                newFirstCharacter   = newLastCharacter;
+                newLastCharacter    = firstCharacter;
 
                 var tmp         = newFirstPoint;
                 newFirstPoint   = newLastPoint;
                 newLastPoint    = tmp;
             }
-
-            // 
-            /*foreach(Match match in emojiCollection)
-            {
-                if(match.Index == last.FirstCharacterIndex)
-                {
-                    length += match.Length - 1;
-                    break;
-                }
-            }*/
-
-            //mainTextSource = mainTextSource.AddSelection(start, start + Math.Abs(length));
             InvalidateVisual();
             return (0, 0);
         }
@@ -319,40 +311,46 @@ namespace TextEmoji.objects
                         // if line contains the start of the selection 
                         // it means textSourcePosition < firstCharacterPosition
                         // and textSourcePosition + line.Length > firstCharacterPosition
-                        if(textSourcePosition < firstCharacter.FirstCharacterIndex 
-                            && textSourcePosition + line.Length > firstCharacter.FirstCharacterIndex)
+                        if(textSourcePosition <= newFirstCharacter.FirstCharacterIndex 
+                            && textSourcePosition + line.Length > newFirstCharacter.FirstCharacterIndex)
                         {
-                            double pointx       = Math.Max(newFirstPoint.X, 0);
+                            double pointx       = Math.Min(Math.Max(newFirstPoint.X, 0), line.Width);
                             double width_rect   = line.Width - pointx;
 
                             // if the line conains also the end of selection
-                            if (lastCharacter.FirstCharacterIndex < textSourcePosition + line.Length)
+                            if (newLastCharacter.FirstCharacterIndex < textSourcePosition + line.Length)
                             {
-                                double x = Math.Min(newLastPoint.X, line.Width);
-                                width_rect = Math.Abs(x - pointx);
-                            }
+                                double x    = Math.Min(newLastPoint.X, line.Width);
+                                width_rect  = Math.Abs(x - pointx);
 
-                            Rect rec = new Rect(pointx, linePosition.Y, width_rect, line.Height);
-                            dc.DrawRectangle(Brushes.Orange, null, rec);
+                                Rect rec    = new Rect(pointx, linePosition.Y, width_rect, line.Height);
+                                dc.DrawRoundedRectangle(Utility.GetSelectionBrushColor("#b3d9ff"), null, rec, Const.CornerRect, Const.CornerRect);
+                            }
+                            else
+                            {
+                                Rect rec = new Rect(pointx, linePosition.Y, width_rect, line.Height);
+                                dc.DrawGeometry(Utility.GetSelectionBrushColor("#b3d9ff"), null, createGeometryLeftRounded(rec));
+                            }
                         }
                         // If the line contains the end of the selection
                         // it means lastCharacterPosition > textSourcePosition
                         // and textSourcePosition + line.Length > lastCharacterPosition
-                        else if (textSourcePosition < lastCharacter.FirstCharacterIndex
-                            && textSourcePosition + line.Length > lastCharacter.FirstCharacterIndex)
+                        else if (textSourcePosition < newLastCharacter.FirstCharacterIndex
+                            && textSourcePosition + line.Length > newLastCharacter.FirstCharacterIndex)
                         {
-                            double pointx = Math.Min(line.Width, lastPoint.X);
+                            double pointx = Math.Min(line.Width, newLastPoint.X);
+                            
                             Rect rec = new Rect(0, linePosition.Y, pointx, line.Height);
-                            dc.DrawRectangle(Brushes.Orange, null, rec);
+                            dc.DrawGeometry(Utility.GetSelectionBrushColor("#b3d9ff"), null, createGeometryRightRounded(rec));
                         }
                         // The selection contains the entire line
                         // it means firstCharacterPosition < textSourcePosition
                         // and lastCharacterPosition > textSourcePosition + line.Length
-                        else if (firstCharacter.FirstCharacterIndex < textSourcePosition
-                            && textSourcePosition + line.Length < lastCharacter.FirstCharacterIndex)
+                        else if (newFirstCharacter.FirstCharacterIndex < textSourcePosition
+                            && textSourcePosition + line.Length < newLastCharacter.FirstCharacterIndex)
                         {
                             Rect rec = new Rect(0, linePosition.Y, line.Width, line.Height);
-                            dc.DrawRectangle(Brushes.Orange, null, rec);
+                            dc.DrawRectangle(Utility.GetSelectionBrushColor("#b3d9ff"), null, rec);
                         }
 
 
@@ -367,8 +365,10 @@ namespace TextEmoji.objects
                         textSourcePosition  += line.Length;
                         linePosition.Y      += line.Height;
 
-                        // DRAW EMOJI
-                        //
+
+                        /*************
+                         * Draw emoji
+                         *************/
                         // ho bisogno di torvare la posizione delle varie emoji
                         // ho la lista delle emoji all'interno di emojiCollection
                         // devo controllare che la linea che sto gestendo non contenga
@@ -405,6 +405,57 @@ namespace TextEmoji.objects
             }
         }
 
+        private StreamGeometry createGeometryLeftRounded(Rect rectangleRect)
+        {
+            // Define the radius for the rounded corners
+            double cornerRadius = Const.CornerRect;
+
+            // Create a StreamGeometry to define the custom shape
+            StreamGeometry roundedRectangleGeometry = new StreamGeometry();
+            using (StreamGeometryContext ctx = roundedRectangleGeometry.Open())
+            {
+                double x = rectangleRect.X;
+                double y = rectangleRect.Y;
+                double width    = rectangleRect.Width;
+                double height   = rectangleRect.Height;
+
+                // Define the figure with a rounded left corner
+                ctx.BeginFigure(new Point(x + cornerRadius, y), true, true);
+                ctx.ArcTo(new Point(x, y + cornerRadius), new Size(cornerRadius, cornerRadius), 0, false, SweepDirection.Counterclockwise, true, false);
+                ctx.LineTo(new Point(x, y + height - cornerRadius), true, false);
+                ctx.ArcTo(new Point(x + cornerRadius, y + height), new Size(cornerRadius, cornerRadius), 0, false, SweepDirection.Counterclockwise, true, false);
+                ctx.LineTo(new Point(x + width, y + height), true, false);
+                ctx.LineTo(new Point(x + width, y), true, false);
+            }
+            return roundedRectangleGeometry;
+        }
+
+        private StreamGeometry createGeometryRightRounded(Rect rectangleRect)
+        {
+            // Define the radius for the rounded corners
+            double cornerRadius = Const.CornerRect;
+
+            // Create a StreamGeometry to define the custom shape
+            StreamGeometry roundedRectangleGeometry = new StreamGeometry();
+            using (StreamGeometryContext ctx = roundedRectangleGeometry.Open())
+            {
+                double x = rectangleRect.X;
+                double y = rectangleRect.Y;
+                double width    = rectangleRect.Width;
+                double height   = rectangleRect.Height;
+
+                // Define the figure with a rounded right corner
+                ctx.BeginFigure(new Point(x, y), true, true);
+                ctx.LineTo(new Point(x + width - cornerRadius, y), true, false);
+                ctx.ArcTo(new Point(x + width, y + cornerRadius), new Size(cornerRadius, cornerRadius), 0, false, SweepDirection.Clockwise, true, false);
+                ctx.LineTo(new Point(x + width, y + height - cornerRadius), true, false);
+                ctx.ArcTo(new Point(x + width - cornerRadius, y + height), new Size(cornerRadius, cornerRadius), 0, false, SweepDirection.Clockwise, true, false);
+                ctx.LineTo(new Point(x, y + height), true, false);
+            }
+
+            return roundedRectangleGeometry;
+        }
+
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             // Start selection mode
@@ -424,8 +475,7 @@ namespace TextEmoji.objects
                 parent.CleanLastImage();
 
             // Get the first Character info
-            firstCharacter  = GetCharacterFromPoint(p);
-            firstPoint      = p;
+            (firstCharacter, firstPoint)  = GetCharacterFromPoint(p);
 
             // To capture the mouse
             e.Handled = true;
@@ -439,8 +489,8 @@ namespace TextEmoji.objects
             Point p = e.GetPosition(this);
 
             // Get the first Character info
-            lastCharacter = GetCharacterFromPoint(p);
-            lastPoint = p;
+            (lastCharacter, lastPoint) = GetCharacterFromPoint(p);
+            //lastPoint = p;
 
             // if first is eqaul to the last one character
             // I perform a link click if it's a match
@@ -479,7 +529,9 @@ namespace TextEmoji.objects
             Point p = e.GetPosition(this);
 
             // Get the first Character info
-            var character = GetCharacterFromPoint(p);
+            CharacterHit    character;
+            Point           point;
+            (character, point) = GetCharacterFromPoint(p);
 
             if (linkMatches != null)
             {
@@ -494,9 +546,9 @@ namespace TextEmoji.objects
                     }
                 }
             }
-            if (!string.IsNullOrEmpty(mainTextSource.GetSelectedText()))
+            if (!string.IsNullOrEmpty(GetSelectedText()))
             {
-                rightMouseClickWithSelectedText(mainTextSource.GetSelectedText(), e);
+                rightMouseClickWithSelectedText(GetSelectedText(), e);
                 e.Handled = true;
             }
 
@@ -511,8 +563,8 @@ namespace TextEmoji.objects
             Point p = Mouse.GetPosition(this);
 
             // Get the first Character info
-            lastCharacter = GetCharacterFromPoint(p);
-            lastPoint = p;
+            (lastCharacter, lastPoint) = GetCharacterFromPoint(p);
+            //lastPoint = p;
 
             // draw
             drawHighlightTextFromFirstCharacterToTheLastOne();
@@ -532,16 +584,31 @@ namespace TextEmoji.objects
             //TODO
             if (e.Key == Key.C && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
-                selectedText = mainTextSource.GetSelectedText();
+                selectedText = GetSelectedText();
                 if (!selectedText.Equals(""))
                 {
-                    //Clipboard.SetText(selectedText);
                     if (parent != null) parent.CopyText(selectedText);
                     e.Handled = true;
                 }
             }
 
             base.OnKeyDown(e);
+        }
+
+        public string GetSelectedText()
+        {
+            if(firstCharacter.FirstCharacterIndex >= 0 && lastCharacter.FirstCharacterIndex >= 0)
+            {
+                int start = firstCharacter.FirstCharacterIndex;
+                int length = lastCharacter.FirstCharacterIndex - firstCharacter.FirstCharacterIndex;
+                if(length < 0)
+                {
+                    length = Math.Abs(length);
+                    start = lastCharacter.FirstCharacterIndex;
+                }
+                return mainTextSource.Text.Substring(start, length);
+            }
+            return "";
         }
 
         //***************
@@ -553,8 +620,12 @@ namespace TextEmoji.objects
         public void CleanImage()
         {
             selectedText    = "";
-            firstCharacter  = new CharacterHit(0, 0);
-            lastCharacter   = new CharacterHit(0, 0);
+
+            newFirstCharacter = new CharacterHit(-1, 0);
+            newLastCharacter  = new CharacterHit(-1, 0);
+
+            firstCharacter  = new CharacterHit(-1, 0);
+            lastCharacter   = new CharacterHit(-1, 0);
             InvalidateVisual();
         }
 
