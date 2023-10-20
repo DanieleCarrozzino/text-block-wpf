@@ -102,10 +102,21 @@ namespace TextEmoji.objects
             set => OnSizeChanged(value);
         }
 
+        public int FontSize
+        {
+            set => OnFontSizeChanged(value);
+        }
+
         private void OnSizeChanged(Size size)
         {
             width_object  = (int)size.Width;
             height_object = (int)size.Height;
+            InvalidateVisual();
+        }
+
+        private void OnFontSizeChanged(int font)
+        {
+            Const.FontSize = font;
             InvalidateVisual();
         }
 

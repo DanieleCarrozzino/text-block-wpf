@@ -84,7 +84,8 @@ namespace TextEmoji.objects
 
         private void OnFontSizePropertyChanged(object fontsize)
         {
-            Const.FontSize = (int)fontsize;
+            if (image != null)
+                image.FontSize = (int)fontsize;
         }
 
         //***************
