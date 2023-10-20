@@ -56,10 +56,6 @@ namespace TextEmoji.objects
         // Margin text
         Point linePosition = new Point(0, 0);
 
-        // call from xaml or from code
-        private bool callFromXaml = false;
-        private bool initilized = false;
-
         // Parent
         private ITextEmoji parent = null;
 
@@ -76,68 +72,45 @@ namespace TextEmoji.objects
         public event Action<string, MouseButtonEventArgs> RightTextSelectedClicked;
         public event Action<string> SelectedChanged;
 
-        public TextEmojiImage()
-        {
-            this.Focusable      = true;
-            Visibility          = Visibility.Collapsed;
-            callFromXaml        = true;
-            HorizontalAlignment = HorizontalAlignment.Left;
-            this.Cursor         = Cursors.IBeam;
-        }
 
-        public TextEmojiImage(string text, int fontsize, ITextEmoji parent)
+        public TextEmojiImage(ITextEmoji parent)
         {
             this.Focusable      = true;
             Visibility          = Visibility.Collapsed;
-            Text                = text;
-            callFromXaml        = false;
             HorizontalAlignment = HorizontalAlignment.Left;
             this.parent         = parent;
             this.Cursor         = Cursors.IBeam;
-            Const.FontSize      = fontsize;
         }
 
         // Text to draw
-        public string Text
-        {
-            get => (string)GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
-        }
-
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            nameof(Text), typeof(string), typeof(TextEmojiImage), new FrameworkPropertyMetadata("",
-                (o, e) => (o as TextEmojiImage)?.OnTextPropertyChanged(e.NewValue as string))
-            { DefaultUpdateSourceTrigger = UpdateSourceTrigger.LostFocus });
-
-        private void OnTextPropertyChanged(string text)
-        {
-            if (callFromXaml || initilized)
-                Init(text);
+        private string _text = "";
+        public string Text{ 
+            get 
+            {
+                return _text;
+            } 
+            set
+            {
+                _text = value;
+                Init(value);
+            }
         }
 
 
         public Size Size
         {
-            set
-            {
-                OnSizeChanged(value);
-            }
+            set => OnSizeChanged(value);
         }
 
         private void OnSizeChanged(Size size)
         {
             width_object  = (int)size.Width;
             height_object = (int)size.Height;
-
-            if (!callFromXaml && !initilized)
-                Init(Text);
-            else
-                drawText();
+            InvalidateVisual();
         }
 
         public void Init(string text)
         {
-            initilized      = true;
             emojiCollection = EmojiData.MatchOne.Matches(text);
             linkMatches     = Utility.CheckValidUrl(text);
             HighLightText();

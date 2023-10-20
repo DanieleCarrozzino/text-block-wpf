@@ -31,15 +31,9 @@ namespace TextEmoji.objects
         {
             SetValue(FontSizeProperty, (int)Const.FontSize);
 ;           HorizontalAlignment = HorizontalAlignment.Stretch;
-            this.Initialized    += TextEmoji_Initialized;
-        }
 
-        private void TextEmoji_Initialized(object? sender, EventArgs e)
-        {
-            // Init object I received
-            // all my custom properties
-            /*image = new TextEmojiImage(Text, FontSize, this);
-            Children.Add(image);*/
+            image = new TextEmojiImage(this);
+            Children.Add(image);
         }
 
         // Text to draw
@@ -56,9 +50,8 @@ namespace TextEmoji.objects
 
         private void OnTextPropertyChanged(string text)
         {
-            // TODO handle the changes of the text
-            image = new TextEmojiImage(Text, FontSize, this);
-            Children.Add(image);
+            if(image != null)
+                image.Text = text;
         }
 
         public Size SizeContainer
@@ -91,7 +84,7 @@ namespace TextEmoji.objects
 
         private void OnFontSizePropertyChanged(object fontsize)
         {
-            // TODO handle the changes of the fontSize
+            Const.FontSize = (int)fontsize;
         }
 
         //***************
