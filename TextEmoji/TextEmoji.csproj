@@ -38,7 +38,7 @@
 
   <ItemGroup>
     <Reference Include="Emoji.Wpf">
-      <HintPath>..\..\..\emoji.wpf\Emoji.Wpf\bin\Release\netcoreapp3.1\Emoji.Wpf.dll</HintPath>
+      <HintPath>Lib\Emoji.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Stfu">
       <HintPath>Lib\Stfu.dll</HintPath>

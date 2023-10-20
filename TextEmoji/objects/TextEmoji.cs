@@ -29,7 +29,8 @@ namespace TextEmoji.objects
 
         public TextEmoji()
         {
-            HorizontalAlignment = HorizontalAlignment.Stretch;
+            SetValue(FontSizeProperty, (int)Const.FontSize);
+;           HorizontalAlignment = HorizontalAlignment.Stretch;
             this.Initialized    += TextEmoji_Initialized;
         }
 

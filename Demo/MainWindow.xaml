@@ -24,7 +24,7 @@
             Text="{Binding text}"
             Background="AliceBlue"     
             SizeContainer="{Binding Path=Size}"
-            FontSize="45"
+            FontSize="70"
             RightLinkClicked="TextEmoji_RightLinkClicked"
             />
 

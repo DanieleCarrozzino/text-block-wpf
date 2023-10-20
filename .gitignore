@@ -1,6 +1,7 @@
 # Our targets
 obj/
 bin/
+.vs/
 # Visual Studio cruft
 .vs
 *.suo
