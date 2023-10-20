@@ -32,6 +32,7 @@
                         MinWidth="200"
                         Width="300"
                         MaxWidth="350"
+                        CopyTextAction="TextEmoji_CopyTextAction"
                         />
 
                 </DataTemplate>

@@ -592,9 +592,11 @@ namespace TextEmoji.objects
 
         public string GetSelectedText()
         {
-            if(firstCharacter.FirstCharacterIndex >= 0 && lastCharacter.FirstCharacterIndex >= 0)
+            if(firstCharacter.FirstCharacterIndex >= 0 
+                && lastCharacter.FirstCharacterIndex >= 0 
+                && (lastCharacter.FirstCharacterIndex + firstCharacter.FirstCharacterIndex) != 0)
             {
-                int start = firstCharacter.FirstCharacterIndex;
+                int start  = firstCharacter.FirstCharacterIndex;
                 int length = lastCharacter.FirstCharacterIndex - firstCharacter.FirstCharacterIndex;
                 if(length < 0)
                 {

@@ -95,5 +95,10 @@ namespace Demo
 
             }
         }
+
+        private void TextEmoji_CopyTextAction(string obj)
+        {
+
+        }
     }
 }
