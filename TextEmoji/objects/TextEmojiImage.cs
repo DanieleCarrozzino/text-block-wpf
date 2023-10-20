@@ -209,7 +209,7 @@ namespace TextEmoji.objects
         private (CharacterHit, Point) GetCharacterFromPoint(Point point)
         {
             // Get line position
-            int index = Math.Max(((int)(point.Y) + (int)LineHeight()) / (int)LineHeight() - 1, 0);
+            int index = (int)Math.Max(((point.Y) + LineHeight()) / LineHeight() - 1, 0);
             if (index >= textIntegers.Count) return (new CharacterHit(mainTextSource.Text.Length - 1, 0), /*TODO resolve this*/new Point(0, 0));
 
             int storePosition = textIntegers[index];
