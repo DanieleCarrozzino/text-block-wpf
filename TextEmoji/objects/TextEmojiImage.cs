@@ -601,7 +601,7 @@ namespace TextEmoji.objects
                     length = Math.Abs(length);
                     start = lastCharacter.FirstCharacterIndex;
                 }
-                return mainTextSource.Text.Substring(start, length);
+                return mainTextSource.Text.Substring(start, length + 1);
             }
             return "";
         }
