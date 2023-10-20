@@ -13,12 +13,15 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using System.Xml.Linq;
 using TextEmoji.@interface;
 
 namespace TextEmoji.objects
@@ -35,7 +38,7 @@ namespace TextEmoji.objects
         private MatchCollection emojiCollection;
 
         // Object dimensions
-        private int width_object = 300;
+        private int width_object  = 300;
         private int height_object = 300;
 
         // Info characters on first and last mouse click
@@ -151,6 +154,7 @@ namespace TextEmoji.objects
         private void removeMouseCapture()
         {
             startSelected = false;
+            stopTimer();
             Mouse.Capture(null);
         }
 
@@ -545,6 +549,7 @@ namespace TextEmoji.objects
             {
                 rightMouseClickWithSelectedText(GetSelectedText(), e);
                 e.Handled = true;
+                return;
             }
 
             base.OnMouseRightButtonUp(e);
@@ -553,6 +558,8 @@ namespace TextEmoji.objects
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (!startSelected) return;
+
+            ManageMouseMoveOutOfBorder(e);
 
             // Get mouse position
             Point p = Mouse.GetPosition(this);
@@ -624,6 +631,88 @@ namespace TextEmoji.objects
             firstCharacter  = new CharacterHit(-1, 0);
             lastCharacter   = new CharacterHit(-1, 0);
             InvalidateVisual();
+        }
+
+
+        //*******************
+        //
+        // SCROLLABLE logic
+        //
+        //*******************
+
+        private ScrollViewer parentScrollable = null;
+
+        private void ManageMouseMoveOutOfBorder(MouseEventArgs e)
+        {
+            parentScrollable ??= getScrollableParent();
+            var p = e.GetPosition(parentScrollable);
+
+            if (p.Y > parentScrollable.ActualHeight || p.Y < 0)
+            {
+                up      = p.Y < 0;
+                delta   = Math.Abs(p.Y) / 30;
+                if (!timerRunning())
+                    MoveScroll();
+            }
+            else stopTimer();
+        }
+
+        private bool up      = false;
+        private double delta = 2;
+        private DispatcherTimer timer;
+
+        private void MoveScroll()
+        {
+            getTimer().Start();            
+        }
+
+        private DispatcherTimer getTimer()
+        {
+            timer ??= new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(14);
+            timer.Tick += (sender, e) =>
+            {
+                Point pointReferToParent = this.TranslatePoint(new Point(0, 0), parentScrollable);
+
+                if (pointReferToParent.Y + this.ActualHeight > parentScrollable.ActualHeight && !up)
+                {
+                    parentScrollable.ScrollToVerticalOffset(parentScrollable.VerticalOffset + Math.Min(delta, pointReferToParent.Y + this.ActualHeight - parentScrollable.ActualHeight));
+                }
+                else if (pointReferToParent.Y < 0 && up)
+                {
+                    parentScrollable.ScrollToVerticalOffset(parentScrollable.VerticalOffset - Math.Min(delta, Math.Abs(pointReferToParent.Y)));
+                }
+                else timer.Stop();
+            };
+            return timer;
+        }
+
+        private void stopTimer()
+        {
+            if (timer != null) timer.Stop();
+        }
+
+        private bool timerRunning()
+        {
+            if (timer != null) return timer.IsEnabled;
+            return false;
+        }
+
+        private ScrollViewer getScrollableParent()
+        {
+            DependencyObject parent = VisualTreeHelper.GetParent(this);
+
+            while (parent != null)
+            {
+                if (parent is ScrollViewer scrollInfo)
+                {
+                    return scrollInfo;
+                }
+
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+
+            return null;
         }
 
     }

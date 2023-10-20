@@ -30,6 +30,14 @@ namespace Demo
             InitializeComponent();
 
             var l = new List<String>();
+            l.Add("dani🥗dani🤎dani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw ");
+            l.Add("kwhfjeb wehbg kjb 🎶evfkjewb vkj");
+            l.Add("dani🥗dani🤎dani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw ");
+            l.Add("dani🥗dani🤎dani🎶dani");
+            l.Add("kwhfjeb wehbg kjb 🎶evfkjewb vkj");
+            l.Add("dani🥗dani🤎dani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw ");
+            l.Add("dani🥗dani🤎dani🎶dani");
+            l.Add("kwhfjeb wehbg kjb 🎶evfkjewb vkj");
             l.Add("dani🥗dani🤎dani🎶dani");
             l.Add("kwhfjeb wehbg kjb 🎶evfkjewb vkj");
 

@@ -20,14 +20,21 @@
 
         <ListView
             Grid.Row="0"
-            Name="list">
+            Height="200"
+            Name="list"
+            VirtualizingStackPanel.ScrollUnit="Pixel"
+            VirtualizingStackPanel.VirtualizationMode="Recycling"
+            VirtualizingStackPanel.IsVirtualizing="False"
+            VirtualizingStackPanel.CacheLength="0"                    
+            VirtualizingStackPanel.CacheLengthUnit="Item"
+            VirtualizingStackPanel.IsVirtualizingWhenGrouping="False">
 
             <ListView.ItemTemplate>
                 <DataTemplate>
 
                     <text:TextEmoji 
                         Text="{Binding}"
-                        FontSize="60"
+                        FontSize="30"
                         Background="Red"
                         MinWidth="200"
                         Width="300"
