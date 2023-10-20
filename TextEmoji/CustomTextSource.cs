@@ -26,7 +26,6 @@ namespace TextEmoji
         /// <summary>
         /// Highlight list of size and position
         /// </summary>
-        public HashSet<(int, int, int)> positionList = new HashSet<(int, int, int)>();
         public HashSet<(int, int, int)> positionLink = new HashSet<(int, int, int)>();
 
         public int startIndex = 0;
@@ -39,32 +38,7 @@ namespace TextEmoji
 
         public CustomTextSource ClearSelection()
         {
-            positionList.Clear();
-            positionList.UnionWith(positionLink);
-            return new CustomTextSource(Text, positionList.OrderBy(item => item.Item1).ToList());
-        }
-
-        public CustomTextSource AddSelection(int startIndex, int lastIndex)
-        {
-            // Create selection info
-            if (lastIndex > startIndex)
-            {
-                this.startIndex = startIndex;
-                this.lastIndex = lastIndex;
-            }
-            else
-            {
-                this.startIndex = lastIndex;
-                this.lastIndex = startIndex;
-            }
-
-            // clear last selection
-            positionList.Clear();
-            positionList.UnionWith(positionLink);
-
-            // Define text and position list
-            positionList.Add((startIndex, lastIndex - startIndex, (int)TYPE.SELECTION));
-            return new CustomTextSource(Text, positionList.OrderBy(item => item.Item1).ToList());
+            return new CustomTextSource(Text, positionLink.ToList());
         }
 
         /// <summary>
@@ -75,97 +49,7 @@ namespace TextEmoji
         public CustomTextSource(string text, List<(int, int, int)> list)
         {
             // Clear link list
-            positionLink = list.Where(item => item.Item3 == (int)TYPE.LINK).ToHashSet();
-
-            // Get the selection item
-            // from the list
-            var selectedItem  = list.Find(item => item.Item3 == (int)TYPE.SELECTION);
-            var withoutModify = selectedItem;
-            list.Remove(selectedItem);
-
-            foreach ((int index, int length, int type) in list)
-            {
-                // I keep only the items that 
-                // are finished inside the selected
-                // range
-                if (
-                    selectedItem.Item3 == (int)TYPE.SELECTION && (
-                    /*the first part is inside*/
-                    (index >= selectedItem.Item1 && index + length >= selectedItem.Item1 + selectedItem.Item2 && index <= selectedItem.Item1 + selectedItem.Item2) ||
-                    /*the last part is inside*/
-                    (index + length <= selectedItem.Item1 + selectedItem.Item2 && index <= selectedItem.Item1 && index + length >= selectedItem.Item1) ||
-                    /*link is totally inside*/
-                    (index >= selectedItem.Item1 && index + length <= selectedItem.Item1 + selectedItem.Item2) ||
-                    /*selection is totally inside a link*/
-                    (index <= selectedItem.Item1 && index + length > selectedItem.Item1 + selectedItem.Item2))
-                    )
-                {
-                    // This item is in part or totally inside the selection range
-                    // On first condition I only remove the share part from the selection range 
-                    if ((index >= selectedItem.Item1 && index + length >= selectedItem.Item1 + selectedItem.Item2 && index <= selectedItem.Item1 + selectedItem.Item2))
-                    {
-                        var item_to_add = (index - 1, selectedItem.Item1 + selectedItem.Item2 - index + 1, (int)TYPE.BOTH);
-                        var item_modify = (selectedItem.Item1 + selectedItem.Item2, index + length - (selectedItem.Item1 + selectedItem.Item2) - 1, type);
-                        selectedItem.Item2 = index - selectedItem.Item1 - 1;
-
-                        positionList.Add(item_to_add);
-                        positionList.Add(item_modify);
-
-                    }
-                    else if (index + length <= selectedItem.Item1 + selectedItem.Item2 && index <= selectedItem.Item1 && index + length >= selectedItem.Item1)
-                    {
-                        var item_modify = (index, selectedItem.Item1 - index - 1, type);
-                        var item_to_add = (selectedItem.Item1 - 1, index + length - selectedItem.Item1, (int)TYPE.BOTH);
-
-                        selectedItem.Item1 = index + length;
-                        selectedItem.Item2 = selectedItem.Item2 - item_to_add.Item2 - 1;
-
-                        positionList.Add(item_to_add);
-                        positionList.Add(item_modify);
-                    }
-                    else if ((index <= selectedItem.Item1 && index + length >= selectedItem.Item1 + selectedItem.Item2))
-                    {
-                        // Convert the selection in a Both 
-                        selectedItem.Item3 = (int)TYPE.BOTH;
-                        positionList.Add(selectedItem);
-
-                        // The remains pieces create 2 links
-                        var first_link  = (index, selectedItem.Item1 - index - 1, (int)TYPE.LINK);
-                        var second_link = (selectedItem.Item1 + selectedItem.Item2, (length + index) - (selectedItem.Item1 + selectedItem.Item2), (int)TYPE.LINK);
-
-                        positionList.Add(first_link);
-                        positionList.Add(second_link);
-                    }
-                    else
-                    {
-                        // It's completly inside
-                        // I have to split
-                        // the selection range and take
-                        // only the left part of the selection
-                        // for the future comparison
-
-                        //first part of the selection
-                        var first_sel = (selectedItem.Item1, index - selectedItem.Item1 - 1, (int)TYPE.SELECTION);
-
-                        //both element
-                        var item_to_add = (index, length, (int)TYPE.BOTH);
-
-                        //last part of the selection
-                        selectedItem = (index + length, withoutModify.Item2 + withoutModify.Item1 - (index + length), (int)TYPE.SELECTION);
-
-                        positionList.Add(item_to_add);
-                        positionList.Add(first_sel);
-                    }
-                }
-                else
-                {
-                    positionList.Add((index, length, type));
-                }
-            }
-
-            if(selectedItem.Item3 == (int)TYPE.SELECTION)
-                positionList.Add(selectedItem);
-            positionList    = positionList.ToList().OrderBy(item => item.Item1).ToHashSet();
+            positionLink    = list.Where(item => item.Item3 == (int)TYPE.LINK).ToHashSet();
             Text            = text;
         }
 
@@ -186,7 +70,7 @@ namespace TextEmoji
             if (textSourceCharacterIndex < Text.Length)
             {
                 // Link and selected mode
-                if (positionList.Count > 0)
+                if (positionLink.Count > 0)
                 {
                     return manageHighLightText(textSourceCharacterIndex);
                 }
@@ -205,7 +89,7 @@ namespace TextEmoji
         /// <returns></returns>
         private TextRun manageHighLightText(int textSourceCharacterIndex)
         {
-            foreach ((int index, int length, int type) in positionList)
+            foreach ((int index, int length, int type) in positionLink)
             {
                 // Se cIndex è maggiore di index + length
                 // posso saltare questo elemento perchè già gestito
@@ -227,27 +111,20 @@ namespace TextEmoji
                 // e index + length allora disegno HIGHLIGHT
                 if(textSourceCharacterIndex >= index && textSourceCharacterIndex <= index + length)
                 {
-                    CustomTextRunProperties.STYLE style;
+                    CustomTextRunProperties.STYLE style = CustomTextRunProperties.STYLE.CLEAR;
                     if (type == (int)TYPE.LINK)
                     {
                         style = CustomTextRunProperties.STYLE.HIGHLIGHT;
                     }
-                    else if (type == (int)TYPE.SELECTION)
-                    {
-                        style = CustomTextRunProperties.STYLE.SELECTED;
-                    }
                     else
                     {
-                        style = CustomTextRunProperties.STYLE.BOTH;
+                        // Manage different style
+                        // style = CustomTextRunProperties.STYLE.BOTH;
                     }
                     var final_length = Math.Min(Math.Max(1, length - (textSourceCharacterIndex - index)), Text.Length);
                     return new TextCharacters(Text, textSourceCharacterIndex,
                                             final_length, new CustomTextRunProperties(style));
                 }
-
-                // Improvment potrei eliminare gli elementi
-                // che ho già finito di gestire, se faccio
-                // la continue significa che non sono più utili
             }
 
             // Se cIndex è minore della dimensione del testo
@@ -271,24 +148,6 @@ namespace TextEmoji
         {
             // If you don't have text effects, you can return the same character index.
             return textSourceCharacterIndex;
-        }
-
-        public string GetSelectedText()
-        {
-            int start = -1;
-            int length = 0;
-            foreach(var item in positionList)
-            {
-                if(item.Item3 == (int)TYPE.SELECTION || item.Item3 == (int)TYPE.BOTH)
-                {
-                    if(start == -1)
-                        start = item.Item1;
-                    length += item.Item2;
-                }
-            }
-            if(start != -1 && length > 0)
-                return Text.Substring(start, length + 1);
-            return "";
         }
     }
 }

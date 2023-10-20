@@ -10,6 +10,8 @@
     <None Remove="Lib\Emoji.Wpf.dll" />
     <None Remove="Lib\Stfu.dll" />
     <None Remove="resources\copy.png" />
+    <None Remove="resources\copy_all.png" />
+    <None Remove="resources\web.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +23,12 @@
     </EmbeddedResource>
     <Resource Include="resources\copy.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\copy_all.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\web.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 

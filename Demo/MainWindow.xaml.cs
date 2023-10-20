@@ -28,16 +28,6 @@ namespace Demo
         {
             DataContext = this;
             InitializeComponent();
-
-            List<string> stringList = new List<string>
-            {
-                "Item 1 swkdj vljwhb www.google.it vljhewb dlkvcn welvn dfwb vlkjewvbw 🥗🧻vjdnkw vf",
-                "Item 2lqjw dc👍kj hewcjh e",
-                "Item 3òsdj vòkwje vòkjw evj wlfje🥲👩🏻‍🎨 voi2hubevhjb we hklfvlk3erhvlhrlewf vhnlrjewh pv hewrlvjhnlrj lk re",
-                "Item 4wl dfkvòlkw🥰 jòflv òewrl òew rò ròlj vòlrjwfvkjndewfkljvn dgfbve ndfòlb eròlb nòl rneòbkl newròlkjb òl rjwòlbg jrwòl bgkjòerlj"
-            };
-
-            list.ItemsSource = stringList;
         }
 
         public string text

@@ -85,7 +85,7 @@ namespace TextEmoji.objects
             this.Cursor         = Cursors.IBeam;
         }
 
-        public TextEmojiImage(string text, ITextEmoji parent)
+        public TextEmojiImage(string text, int fontsize, ITextEmoji parent)
         {
             this.Focusable      = true;
             Visibility          = Visibility.Collapsed;
@@ -94,6 +94,7 @@ namespace TextEmoji.objects
             HorizontalAlignment = HorizontalAlignment.Left;
             this.parent         = parent;
             this.Cursor         = Cursors.IBeam;
+            Const.FontSize      = fontsize;
         }
 
         // Text to draw
@@ -216,7 +217,7 @@ namespace TextEmoji.objects
         private (CharacterHit, Point) GetCharacterFromPoint(Point point)
         {
             // Get line position
-            int index = Math.Max(((int)(point.Y) + (int)Const.LineHeight) / (int)Const.LineHeight - 1, 0);
+            int index = Math.Max(((int)(point.Y) + (int)Const.LineHeight()) / (int)Const.LineHeight() - 1, 0);
             if (index >= textIntegers.Count) return (new CharacterHit(mainTextSource.Text.Length - 1, 0), /*TODO resolve this*/new Point(0, 0));
 
             int storePosition = textIntegers[index];
@@ -383,12 +384,12 @@ namespace TextEmoji.objects
                                 double distance = line.GetDistanceFromCharacterHit(new CharacterHit(match.Index, 0));
                                 Point point = new(distance - 2, linePosition.Y - line.Height - 4);
 
-                                double width_o = Const.LineHeight + 6;
-                                double height_o = Const.LineHeight + 6;
+                                double width_o = Const.LineHeight() + 6;
+                                double height_o = Const.LineHeight() + 6;
 
                                 var di = new DrawingImage(Emoji.Wpf.Image.RenderEmoji(match.Value, out width_o, out height_o));
                                 di.Freeze();
-                                Rect imageRect = new Rect(point, new Size(Const.LineHeight + 6, Const.LineHeight + 6));
+                                Rect imageRect = new Rect(point, new Size(Const.LineHeight() + 6, Const.LineHeight() + 6));
                                 dc.DrawImage(di, imageRect);
                             }
                         }

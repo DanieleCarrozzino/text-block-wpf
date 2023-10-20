@@ -47,7 +47,9 @@
 
             </Border>
 
-            <Separator Height="4" Margin="10, 0, 10, 0"/>
+            <Separator 
+                Background="LightGray"
+                Height="4" Margin="10, 0, 10, 0"/>
 
             <Border
                 CornerRadius="10"
@@ -64,7 +66,7 @@
                     <Image 
                         Width="20" 
                         Height="20" 
-                        Source="{Binding IconImage}" />
+                        Source="pack://application:,,,/TextEmoji;component/resources/web.png" />
                     <TextBlock 
                         Text="Open link"
                         FontSize="15"

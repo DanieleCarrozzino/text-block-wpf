@@ -37,32 +37,6 @@ namespace TextEmoji.usercontrols
             InitializeComponent();
         }
 
-        public BitmapImage IconToBitmapImage(Icon icon)
-        {
-            if (icon == null) return null;
-            using (System.Drawing.Bitmap bitmap = icon.ToBitmap())
-            {
-                BitmapImage bitmapImage = new BitmapImage();
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    bitmap.Save(stream, ImageFormat.Png);
-                    stream.Position = 0;
-                    bitmapImage.BeginInit();
-                    bitmapImage.StreamSource = stream;
-                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmapImage.EndInit();
-                }
-                return bitmapImage;
-            }
-        }
-
-        public BitmapImage IconImage { 
-            get
-            {
-                return IconToBitmapImage(Utility.GetDefaultBrowserIcon());
-            }
-        }
-
         private void Border_MouseEnter(object sender, MouseEventArgs e)
         {
             var brush = Utility.GetSelectionBrushColor("#f2f2f2");

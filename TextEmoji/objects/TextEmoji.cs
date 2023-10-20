@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using TextEmoji.@interface;
 using TextEmoji.usercontrols;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TextEmoji.objects
 {
@@ -27,17 +29,16 @@ namespace TextEmoji.objects
 
         public TextEmoji()
         {
-            //SizeChanged += TextEmoji_SizeChanged;
             HorizontalAlignment = HorizontalAlignment.Stretch;
+            this.Initialized    += TextEmoji_Initialized;
         }
 
-        private void TextEmoji_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void TextEmoji_Initialized(object? sender, EventArgs e)
         {
-            SizeChanged -= TextEmoji_SizeChanged;
-            if (image != null)
-            {
-                image.Size = new Size(e.NewSize.Width, 0);
-            }
+            // Init object I received
+            // all my custom properties
+            image = new TextEmojiImage(Text, FontSize, this);
+            Children.Add(image);
         }
 
         // Text to draw
@@ -54,8 +55,7 @@ namespace TextEmoji.objects
 
         private void OnTextPropertyChanged(string text)
         {
-            image = new TextEmojiImage(text, this);
-            Children.Add(image);
+            // TODO handle the changes of the text
         }
 
         public Size SizeContainer
@@ -73,6 +73,22 @@ namespace TextEmoji.objects
         {
             if (image != null)
                 image.Size = new Size(((Size)size).Width, 0);
+        }
+
+        public int FontSize
+        {
+            get => (int)GetValue(FontSizeProperty);
+            set => SetValue(FontSizeProperty, value);
+        }
+
+        public static readonly DependencyProperty FontSizeProperty = DependencyProperty.Register(
+            nameof(FontSize), typeof(object), typeof(TextEmoji), new FrameworkPropertyMetadata("",
+                (o, e) => (o as TextEmoji)?.OnFontSizePropertyChanged(e.NewValue))
+            { DefaultUpdateSourceTrigger = UpdateSourceTrigger.LostFocus });
+
+        private void OnFontSizePropertyChanged(object fontsize)
+        {
+            // TODO handle the changes of the fontSize
         }
 
         //***************
