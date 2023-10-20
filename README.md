@@ -27,3 +27,5 @@ this library simplifies the process of rendering text with emojis and adding int
 
 In summary, the TextEmoji library simplifies the process of rendering text-based emojis and adding interactive elements to your WPF application. 
 It offers a user-friendly and visually engaging experience while being highly adaptable to different application requirements
+
+thanks to https://github.com/samhocevar/emoji.wpf for his rendering logic
