@@ -60,7 +60,7 @@ namespace TextEmoji
 
             }
 
-            Typeface = new Typeface("Segoe UI");
+            Typeface = new Typeface("Segoe UI Emoji");
             FontRenderingEmSize = Const.FontSize;
         }
 
