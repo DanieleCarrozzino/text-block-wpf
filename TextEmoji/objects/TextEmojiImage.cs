@@ -126,7 +126,7 @@ namespace TextEmoji.objects
 
         private void OnSizeChanged(Size size)
         {
-            width_object = (int)size.Width;
+            width_object  = (int)size.Width;
             height_object = (int)size.Height;
 
             if (!callFromXaml && !initilized)
@@ -137,9 +137,9 @@ namespace TextEmoji.objects
 
         public void Init(string text)
         {
-            initilized = true;
+            initilized      = true;
             emojiCollection = EmojiData.MatchOne.Matches(text);
-            linkMatches = Utility.CheckValidUrl(text);
+            linkMatches     = Utility.CheckValidUrl(text);
             HighLightText();
 
             MouseUp += OnMouseUp;

@@ -38,8 +38,8 @@ namespace TextEmoji.objects
         {
             // Init object I received
             // all my custom properties
-            image = new TextEmojiImage(Text, FontSize, this);
-            Children.Add(image);
+            /*image = new TextEmojiImage(Text, FontSize, this);
+            Children.Add(image);*/
         }
 
         // Text to draw
@@ -57,6 +57,8 @@ namespace TextEmoji.objects
         private void OnTextPropertyChanged(string text)
         {
             // TODO handle the changes of the text
+            image = new TextEmojiImage(Text, FontSize, this);
+            Children.Add(image);
         }
 
         public Size SizeContainer
