@@ -239,7 +239,7 @@ namespace TextEmoji.objects
             }
             foreach (Match match in emojiCollection)
             {
-                listDifferentStyle.Add((match.Index, 1, (int)CustomTextSource.TYPE.EMOJI));
+                listDifferentStyle.Add((match.Index, match.Length, (int)CustomTextSource.TYPE.EMOJI));
             }
 
             mainTextSource = new CustomTextSource(Text, listDifferentStyle, fontsize);
@@ -363,7 +363,6 @@ namespace TextEmoji.objects
 
                         textSourcePosition  += line.Length;
                         linePosition.Y      += line.Height;
-
 
                         /*************
                          * Draw emoji
