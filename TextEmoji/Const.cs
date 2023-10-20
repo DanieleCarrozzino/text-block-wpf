@@ -12,8 +12,6 @@ namespace TextEmoji
         public static double FontSize       = 20.0;
         public static int CornerRect        = 5;
 
-        public static double LineHeight() { return FontSize * 1.33; }
-
         private static String IANA_TOP_LEVEL_DOMAINS =
         "(?:"
         + "(?:aaa|aarp|abb|abbott|abbvie|abc|able|abogado|abudhabi|academy|accenture|accountant"

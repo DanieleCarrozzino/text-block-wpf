@@ -31,24 +31,17 @@ namespace TextEmoji
         public int startIndex = 0;
         public int lastIndex = 0;
 
-        public CustomTextSource(string text)
-        {
-            Text = text;
-        }
-
-        public CustomTextSource ClearSelection()
-        {
-            return new CustomTextSource(Text, positionLink.ToList());
-        }
+        public int fontsize = (int)Const.FontSize;
 
         /// <summary>
         /// link constructor, receive a list of dimension 
         /// to know where are the link to draw
         /// </summary>
         /// <param name="list">tuple of index and length</param>
-        public CustomTextSource(string text, List<(int, int, int)> list)
+        public CustomTextSource(string text, List<(int, int, int)> list, int fontsize)
         {
             // Clear link list
+            this.fontsize   = fontsize;
             positionLink    = list.Where(item => item.Item3 == (int)TYPE.LINK).ToHashSet();
             Text            = text;
         }
@@ -75,7 +68,7 @@ namespace TextEmoji
                     return manageHighLightText(textSourceCharacterIndex);
                 }
                 return new TextCharacters(Text, textSourceCharacterIndex,
-                                                    Text.Length - textSourceCharacterIndex, new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR));
+                                                    Text.Length - textSourceCharacterIndex, new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR, fontsize));
             }
 
             // Return an end-of-paragraph indicator if there is no more text source.
@@ -104,7 +97,7 @@ namespace TextEmoji
                 if(textSourceCharacterIndex < index)
                 {
                     return new TextCharacters(Text, textSourceCharacterIndex,
-                                            index - textSourceCharacterIndex, new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR));
+                                            index - textSourceCharacterIndex, new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR, fontsize));
                 }
 
                 // Se cIndex è racchiuso all'interno di index
@@ -123,7 +116,7 @@ namespace TextEmoji
                     }
                     var final_length = Math.Min(Math.Max(1, length - (textSourceCharacterIndex - index)), Text.Length);
                     return new TextCharacters(Text, textSourceCharacterIndex,
-                                            final_length, new CustomTextRunProperties(style));
+                                            final_length, new CustomTextRunProperties(style, fontsize));
                 }
             }
 
@@ -133,7 +126,7 @@ namespace TextEmoji
             if(textSourceCharacterIndex < Text.Length)
             {
                 return new TextCharacters(Text, textSourceCharacterIndex,
-                                                    Text.Length - textSourceCharacterIndex, new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR));
+                                                    Text.Length - textSourceCharacterIndex, new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR, fontsize));
             }
 
             return new TextEndOfParagraph(1);

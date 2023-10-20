@@ -29,11 +29,9 @@ namespace TextEmoji.objects
 
         public TextEmoji()
         {
-            SetValue(FontSizeProperty, (int)Const.FontSize);
-;           HorizontalAlignment = HorizontalAlignment.Stretch;
-
-            image = new TextEmojiImage(this);
-            Children.Add(image);
+            //SetValue(FontSizeProperty, (int)Const.FontSize);
+            HorizontalAlignment = HorizontalAlignment.Stretch;
+            Children.Add(GetTextEmojiImage());
         }
 
         // Text to draw
@@ -50,8 +48,7 @@ namespace TextEmoji.objects
 
         private void OnTextPropertyChanged(string text)
         {
-            if(image != null)
-                image.Text = text;
+            GetTextEmojiImage().Text = text;
         }
 
         public Size SizeContainer
@@ -67,8 +64,7 @@ namespace TextEmoji.objects
 
         private void OnSizePropertyChanged(object size)
         {
-            if (image != null)
-                image.Size = new Size(((Size)size).Width, 0);
+            GetTextEmojiImage().Size = new Size(((Size)size).Width, 0);
         }
 
         public int FontSize
@@ -84,8 +80,13 @@ namespace TextEmoji.objects
 
         private void OnFontSizePropertyChanged(object fontsize)
         {
-            if (image != null)
-                image.FontSize = (int)fontsize;
+            GetTextEmojiImage().FontSize = (int)fontsize;
+        }
+
+        private TextEmojiImage GetTextEmojiImage()
+        {
+            if (image == null) image = new TextEmojiImage(this);
+            return image;
         }
 
         //***************

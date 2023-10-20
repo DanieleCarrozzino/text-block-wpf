@@ -11,14 +11,14 @@ namespace TextEmoji
 {
     internal class CustomTextParagraphProperties : TextParagraphProperties
     {
-        public CustomTextParagraphProperties()
+        public CustomTextParagraphProperties(int fontsize)
         {
             TextAlignment = TextAlignment.Left; // Set the default text alignment.
             LineSpacing = 6.0; // Set the default line spacing.
             FlowDirection = FlowDirection.LeftToRight; // Set the default flow direction.
             Indent = 0; // Set the default indentation.
             LineHeight = 1.33 /*Segoe UI font linespacing*/ /*custom.Typeface.FontFamily.LineSpacing*/
-                * Const.FontSize;
+                * fontsize;
 
 
             TextDecoration textDecoration = new TextDecoration
@@ -36,17 +36,17 @@ namespace TextEmoji
 
             TextWrapping = TextWrapping.Wrap; // Set the default text wrapping.
             FirstLineInParagraph = false; // Set the default for the first line in the paragraph.
-            DefaultTextRunProperties = new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR);
+            DefaultTextRunProperties = new CustomTextRunProperties(CustomTextRunProperties.STYLE.CLEAR, fontsize);
         }
 
-        public CustomTextParagraphProperties(CustomTextRunProperties custom)
+        public CustomTextParagraphProperties(CustomTextRunProperties custom, int fontsize)
         {
             TextAlignment = TextAlignment.Left; // Set the default text alignment.
             LineSpacing = 6.0; // Set the default line spacing.
             FlowDirection = FlowDirection.LeftToRight; // Set the default flow direction.
             Indent = 0; // Set the default indentation.
             LineHeight = 1.33 /*Segoe UI font linespacing*/ /*custom.Typeface.FontFamily.LineSpacing*/ 
-                * Const.FontSize;
+                * fontsize;
 
 
             TextDecoration textDecoration = new TextDecoration

@@ -28,6 +28,12 @@ namespace Demo
         {
             DataContext = this;
             InitializeComponent();
+
+            var l = new List<String>();
+            l.Add("kwhfjeb wehbg kjb🤎 evfkjewb vkj");
+            l.Add("kwhfjeb wehbg kjb 🎶evfkjewb vkj");
+
+            list.ItemsSource = l;
         }
 
         public string text
@@ -65,14 +71,14 @@ namespace Demo
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var w = e.NewSize.Width / 3;
-            first.SizeContainer = new Size(w, e.NewSize.Height);
+            //first.SizeContainer = new Size(w, e.NewSize.Height);
             Size = new Size(w, e.NewSize.Height);
         }
 
         public void OnPropertyChangedName(string name) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        private Size _size = new Size(200, 0);
+        private Size _size = new Size(300, 0);
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

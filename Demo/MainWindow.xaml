@@ -18,15 +18,26 @@
 
         </Grid.RowDefinitions>
 
-        <text:TextEmoji 
-            Grid.Row="1"
-            Name="first"
-            Text="{Binding text}"
-            Background="AliceBlue"     
-            SizeContainer="{Binding Path=Size}"
-            FontSize="70"
-            RightLinkClicked="TextEmoji_RightLinkClicked"
-            />
+        <ListView
+            Grid.Row="0"
+            Name="list">
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+
+                    <text:TextEmoji 
+                        Text="{Binding}"
+                        FontSize="60"
+                        Background="Red"
+                        MinWidth="200"
+                        Width="300"
+                        MaxWidth="350"
+                        />
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
 
     </Grid>
 </Window>

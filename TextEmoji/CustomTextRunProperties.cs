@@ -21,7 +21,7 @@ namespace TextEmoji
             CLEAR,
         }
 
-        public CustomTextRunProperties(STYLE style)
+        public CustomTextRunProperties(STYLE style, int fontsize)
         {
             switch (style)
             {
@@ -59,8 +59,8 @@ namespace TextEmoji
 
             }
 
-            Typeface = new Typeface("Segoe UI Emoji");
-            FontRenderingEmSize = Const.FontSize;
+            Typeface            = new Typeface("Segoe UI Emoji");
+            FontRenderingEmSize = fontsize;
         }
 
 
