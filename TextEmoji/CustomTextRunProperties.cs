@@ -19,6 +19,7 @@ namespace TextEmoji
             SELECTED,
             BOTH,
             CLEAR,
+            EMOJI,
         }
 
         public CustomTextRunProperties(STYLE style, int fontsize)
@@ -53,6 +54,10 @@ namespace TextEmoji
                 case STYLE.CLEAR:
                     BackgroundBrush = Brushes.Transparent;
                     ForegroundBrush = Brushes.Black;
+                    break;
+                case STYLE.EMOJI:
+                    ForegroundBrush = Brushes.Transparent;
+                    BackgroundBrush = Brushes.Transparent;
                     break;
                 default:
                     break;

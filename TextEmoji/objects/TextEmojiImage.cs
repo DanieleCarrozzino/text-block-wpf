@@ -228,13 +228,17 @@ namespace TextEmoji.objects
 
         private void HighLightText()
         {
-            List<(int, int, int)> highList = new List<(int, int, int)>();
+            List<(int, int, int)> listDifferentStyle = new List<(int, int, int)>();
             foreach (Match match in linkMatches)
             {
-                highList.Add((match.Index, match.Length, (int)CustomTextSource.TYPE.LINK));
+                listDifferentStyle.Add((match.Index, match.Length, (int)CustomTextSource.TYPE.LINK));
+            }
+            foreach (Match match in emojiCollection)
+            {
+                listDifferentStyle.Add((match.Index, 1, (int)CustomTextSource.TYPE.EMOJI));
             }
 
-            mainTextSource = new CustomTextSource(Text, highList, fontsize);
+            mainTextSource = new CustomTextSource(Text, listDifferentStyle, fontsize);
             this.Visibility = Visibility.Visible;
         }
 

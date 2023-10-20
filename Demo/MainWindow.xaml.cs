@@ -30,7 +30,7 @@ namespace Demo
             InitializeComponent();
 
             var l = new List<String>();
-            l.Add("kwhfjeb wehbg kjb🤎 evfkjewb vkj");
+            l.Add("dani🥗dani🤎dani🎶dani");
             l.Add("kwhfjeb wehbg kjb 🎶evfkjewb vkj");
 
             list.ItemsSource = l;

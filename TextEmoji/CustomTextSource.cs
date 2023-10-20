@@ -19,6 +19,7 @@ namespace TextEmoji
             LINK = 0,
             SELECTION = 1,
             BOTH = 2,
+            EMOJI = 3,
         }
 
         public string Text;
@@ -26,7 +27,7 @@ namespace TextEmoji
         /// <summary>
         /// Highlight list of size and position
         /// </summary>
-        public HashSet<(int, int, int)> positionLink = new HashSet<(int, int, int)>();
+        public HashSet<(int, int, int)> positionCustomStyle = new HashSet<(int, int, int)>();
 
         public int startIndex = 0;
         public int lastIndex = 0;
@@ -41,9 +42,9 @@ namespace TextEmoji
         public CustomTextSource(string text, List<(int, int, int)> list, int fontsize)
         {
             // Clear link list
-            this.fontsize   = fontsize;
-            positionLink    = list.Where(item => item.Item3 == (int)TYPE.LINK).ToHashSet();
-            Text            = text;
+            this.fontsize       = fontsize;
+            positionCustomStyle = list.ToHashSet();
+            Text                = text;
         }
 
         public override TextRun GetTextRun(int textSourceCharacterIndex)
@@ -63,7 +64,7 @@ namespace TextEmoji
             if (textSourceCharacterIndex < Text.Length)
             {
                 // Link and selected mode
-                if (positionLink.Count > 0)
+                if (positionCustomStyle.Count > 0)
                 {
                     return manageHighLightText(textSourceCharacterIndex);
                 }
@@ -82,7 +83,7 @@ namespace TextEmoji
         /// <returns></returns>
         private TextRun manageHighLightText(int textSourceCharacterIndex)
         {
-            foreach ((int index, int length, int type) in positionLink)
+            foreach ((int index, int length, int type) in positionCustomStyle)
             {
                 // Se cIndex è maggiore di index + length
                 // posso saltare questo elemento perchè già gestito
@@ -109,10 +110,9 @@ namespace TextEmoji
                     {
                         style = CustomTextRunProperties.STYLE.HIGHLIGHT;
                     }
-                    else
+                    else if(type == (int)TYPE.EMOJI)
                     {
-                        // Manage different style
-                        // style = CustomTextRunProperties.STYLE.BOTH;
+                        style = CustomTextRunProperties.STYLE.EMOJI;
                     }
                     var final_length = Math.Min(Math.Max(1, length - (textSourceCharacterIndex - index)), Text.Length);
                     return new TextCharacters(Text, textSourceCharacterIndex,
