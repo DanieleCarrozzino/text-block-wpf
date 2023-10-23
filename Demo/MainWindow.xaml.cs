@@ -47,7 +47,7 @@ namespace Demo
         {
             get
             {
-                return "some english text \r\njhfhfكميا منتيص kew😒❤️💙💚💛🧡👍bcdjlkhebdcنمتاص ثنبرايمنت منيت \r\nكيمص نتكم ينصتكمتصيكمن تصew gvw re vwr fv wref gvwer vg\r\nمصي تmhlg kjh gkj صي منت hjgvkjh صيمن تكمصين ت\r\nصيث خمنصطكمب نتkdjs vlkdرطكمصت طكمsome arabic text رنتصيكمن ";
+                return "Test dlweh clwe fvlcw dfjn \n òlwkjs vlkdnjwvkldjwnkl";
             }
         }
 

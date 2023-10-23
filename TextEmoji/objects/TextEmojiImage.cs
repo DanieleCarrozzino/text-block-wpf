@@ -42,10 +42,10 @@ namespace TextEmoji.objects
         private int height_object = 300;
 
         // Info characters on first and last mouse click
-        private CharacterHit firstCharacter;
-        private CharacterHit lastCharacter;
-        private CharacterHit newFirstCharacter;
-        private CharacterHit newLastCharacter;
+        private CharacterHit firstCharacter     = new CharacterHit(-1, 0);
+        private CharacterHit lastCharacter      = new CharacterHit(-1, 0);
+        private CharacterHit newFirstCharacter  = new CharacterHit(-1, 0);
+        private CharacterHit newLastCharacter   = new CharacterHit(-1, 0);
 
         // Info point of first and last mouse click
         private Point firstPoint;
@@ -307,7 +307,7 @@ namespace TextEmoji.objects
                          * Draw selection
                          *****************/
                         var start_bound = Math.Max(newFirstCharacter.FirstCharacterIndex, textSourcePosition);
-                        var end_bound   = Math.Min(newLastCharacter.FirstCharacterIndex, textSourcePosition + line.Length);
+                        var end_bound   = Math.Min(newLastCharacter.FirstCharacterIndex, textSourcePosition + line.Length) + 1;
 
                         if (start_bound != end_bound && end_bound - start_bound > 0)
                         {
