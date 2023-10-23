@@ -60,6 +60,23 @@ namespace TextEmoji.objects
             GetTextEmojiImage().Text = text;
         }
 
+        // Text to select programmatically
+        public string HighlightText
+        {
+            get => (string)GetValue(HighlightTextProperty);
+            set => SetValue(HighlightTextProperty, value);
+        }
+
+        public static readonly DependencyProperty HighlightTextProperty = DependencyProperty.Register(
+            nameof(HighlightText), typeof(string), typeof(TextEmoji), new FrameworkPropertyMetadata("",
+                (o, e) => (o as TextEmoji)?.OnHighlightTextPropertyChanged(e.NewValue as string))
+            { DefaultUpdateSourceTrigger = UpdateSourceTrigger.LostFocus });
+
+        private void OnHighlightTextPropertyChanged(string text)
+        {
+            GetTextEmojiImage().HighlightText = text;
+        }
+
         public Size SizeContainer
         {
             get => (Size)GetValue(SizeProperty);

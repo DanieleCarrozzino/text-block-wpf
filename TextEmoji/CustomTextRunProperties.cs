@@ -37,7 +37,7 @@ namespace TextEmoji
                     ForegroundBrush = Utility.GetBrushColor("#0073e6");
                     break;
                 case STYLE.SELECTED:
-                    BackgroundBrush = Utility.GetBrushColor("#b3d9ff");
+                    BackgroundBrush = Utility.GetBrushColor("#ffd480");
                     ForegroundBrush = Brushes.Black;
                     break;
                 case STYLE.BOTH:

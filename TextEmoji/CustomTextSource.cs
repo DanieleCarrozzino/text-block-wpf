@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Documents;
 using System.Security.Permissions;
 using System.Diagnostics;
+using TextEmoji.objects;
 
 namespace TextEmoji
 {
@@ -20,6 +21,7 @@ namespace TextEmoji
             SELECTION = 1,
             BOTH = 2,
             EMOJI = 3,
+            HIGHLIGHT = 4,
         }
 
         public string Text;
@@ -45,6 +47,18 @@ namespace TextEmoji
             this.fontsize       = fontsize;
             positionCustomStyle = list.ToHashSet();
             Text                = text;
+        }
+
+        public void AddHighlight(AMatch match)
+        {
+            positionCustomStyle.Add((match.Index, match.Length, (int)TYPE.HIGHLIGHT));
+        }
+
+        public void RemoveHighlight()
+        {
+            positionCustomStyle.RemoveWhere((item) => 
+                item.Item3 == (int)TYPE.HIGHLIGHT
+            );
         }
 
         public override TextRun GetTextRun(int textSourceCharacterIndex)
@@ -113,6 +127,10 @@ namespace TextEmoji
                     else if(type == (int)TYPE.EMOJI)
                     {
                         style = CustomTextRunProperties.STYLE.EMOJI;
+                    }
+                    else if (type == (int)TYPE.HIGHLIGHT)
+                    {
+                        style = CustomTextRunProperties.STYLE.SELECTED;
                     }
                     var final_length = Math.Min(Math.Max(1, length - (textSourceCharacterIndex - index)), Text.Length);
                     return new TextCharacters(Text, textSourceCharacterIndex,

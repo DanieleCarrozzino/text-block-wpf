@@ -65,6 +65,9 @@ namespace TextEmoji.objects
         // Selected Text
         private string selectedText = "";
 
+        // Highlight text
+        private AMatch highlightMatch = new AMatch("", -1, -1);
+
         //------------
         //
         // ACTION
@@ -99,6 +102,10 @@ namespace TextEmoji.objects
             }
         }
 
+        public string HighlightText
+        {
+            set => OnHighlightTextChange(value);
+        }
 
         public Size Size
         {
@@ -123,6 +130,32 @@ namespace TextEmoji.objects
             fontsize = font;
             if (mainTextSource != null) mainTextSource.fontsize = font;
             InvalidateVisual();
+        }
+
+        private void OnHighlightTextChange(string highlight)
+        {
+            highlightMatch.Value = highlight;
+            if (Text.ToLower().Contains(highlight.ToLower()))
+            {
+                highlightMatch.Index    = Text.ToLower().IndexOf(highlight.ToLower());
+                highlightMatch.Length   = highlight.Length - 1;
+
+                if(mainTextSource != null)
+                    mainTextSource.AddHighlight(highlightMatch);
+
+                InvalidateVisual();
+            }
+            else if (highlight.Length > 0 && Text.Length > 0)
+            {
+                highlightMatch.Index    = -1;
+                highlightMatch.Value    = "";
+                highlightMatch.Length   = -1;
+
+                if (mainTextSource != null)
+                    mainTextSource.RemoveHighlight();
+
+                InvalidateVisual();
+            }
         }
 
         public void Init(string text)
@@ -240,6 +273,15 @@ namespace TextEmoji.objects
             foreach (Match match in emojiCollection)
             {
                 listDifferentStyle.Add((match.Index, match.Length, (int)CustomTextSource.TYPE.EMOJI));
+            }
+            if(highlightMatch.Value.Length > 0 && Text.ToLower().Contains(highlightMatch.Value.ToLower()))
+            {
+                highlightMatch.Index    = Text.ToLower().IndexOf(highlightMatch.Value.ToLower());
+                highlightMatch.Length   = highlightMatch.Value.Length - 1;
+                listDifferentStyle.Add((
+                    highlightMatch.Index,
+                    highlightMatch.Length,
+                    (int)CustomTextSource.TYPE.HIGHLIGHT));
             }
 
             mainTextSource = new CustomTextSource(Text, listDifferentStyle, fontsize);

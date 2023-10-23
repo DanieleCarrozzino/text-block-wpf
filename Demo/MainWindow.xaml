@@ -24,6 +24,7 @@
             Width="800"
             Height="450"
             CopyTextAction="first_CopyTextAction"
+            HighlightText="test"
             FontSize="20"/>
 
         <!--ListView
