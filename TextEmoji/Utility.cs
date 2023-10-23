@@ -11,6 +11,8 @@ using System.Windows.Controls.Primitives;
 using TextEmoji.usercontrols;
 using System.Windows.Media;
 using System.Diagnostics;
+using System.Windows.Interop;
+using TextEmoji.objects;
 
 namespace TextEmoji
 {
@@ -26,6 +28,12 @@ namespace TextEmoji
         // browser path
         static string browser = string.Empty;
 
+        /// <summary>
+        /// Get all valid links from the 
+        /// passing msg
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         public static List<Match> CheckValidUrl(String msg)
         {
             try
@@ -41,9 +49,64 @@ namespace TextEmoji
             return null;
         }
 
-        public static SolidColorBrush GetSelectionBrushColor(string hexColor)
+        /// <summary>
+        /// Get all valid arabic text 
+        /// from the passing text
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static List<AMatch> GetArabicCollection(string text)
+        {
+            try
+            {
+                var collection = Regex.Matches(text, Const.ARABIC_REGEX);
+
+                List<AMatch> list = new List<AMatch>();
+
+                Match previous = null;
+                foreach (Match match in collection)
+                {
+                    if (previous == null)
+                    {
+                        list.Add(new AMatch(match.Value, match.Index, match.Length));
+                        previous = match;
+                        continue;
+                    }
+
+                    if(previous.Index + previous.Length == match.Index)
+                    {
+                        var change = list[list.Count - 1];
+                        var value  = new AMatch(change.Value + match.Value, change.Index, change.Length + match.Length);
+                        list[list.Count - 1] = value;
+                    }
+                    else
+                    {
+                        list.Add(new AMatch(match.Value, match.Index, match.Length));
+                    }
+                    previous = match;
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+            return null;
+        }
+
+        public static SolidColorBrush GetBrushColor(string hexColor)
         {
             SolidColorBrush backgroundBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(hexColor));
+            backgroundBrush.Freeze();
+
+            return backgroundBrush;
+        }
+
+        public static SolidColorBrush GetSelectionBrushColor()
+        {
+            SolidColorBrush backgroundBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#b3d9ff"));
             backgroundBrush.Freeze();
 
             return backgroundBrush;

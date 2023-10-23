@@ -18,7 +18,15 @@
 
         </Grid.RowDefinitions>
 
-        <ListView
+        <text:TextEmoji
+            Name="first"
+            Text="{Binding text}"
+            Width="800"
+            Height="450"
+            CopyTextAction="first_CopyTextAction"
+            FontSize="20"/>
+
+        <!--ListView
             Grid.Row="0"
             Height="200"
             Name="list"
@@ -45,7 +53,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
 
-        </ListView>
-
-    </Grid>
+        </ListView>-->
+        </Grid>
 </Window>

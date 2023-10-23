@@ -29,8 +29,8 @@ namespace Demo
             DataContext = this;
             InitializeComponent();
 
-            var l = new List<String>();
-            l.Add("🐱‍🚀");
+            /*var l = new List<String>();
+            l.Add("");
             l.Add("dani🥗dani🤎dani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw ");
             l.Add("dani🥗dani🤎dani🎶dani");
             l.Add("kwhfjeb wehbg kjb 🎶evfkjewb vkj");
@@ -40,14 +40,14 @@ namespace Demo
             l.Add("dani🥗dani🤎dani🎶dani");
             l.Add("kwhfjeb wehbg kjb 🎶evfkjewb vkj");
 
-            list.ItemsSource = l;
+            list.ItemsSource = l;*/
         }
 
         public string text
         {
             get
             {
-                return "test🩶 test";
+                return "some english text \r\njhfhfكميا منتيص kew😒❤️💙💚💛🧡👍bcdjlkhebdcنمتاص ثنبرايمنت منيت \r\nكيمص نتكم ينصتكمتصيكمن تصew gvw re vwr fv wref gvwer vg\r\nمصي تmhlg kjh gkj صي منت hjgvkjh صيمن تكمصين ت\r\nصيث خمنصطكمب نتkdjs vlkdرطكمصت طكمsome arabic text رنتصيكمن ";
             }
         }
 
@@ -78,7 +78,7 @@ namespace Demo
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var w = e.NewSize.Width / 3;
-            //first.SizeContainer = new Size(w, e.NewSize.Height);
+            first.SizeContainer = new Size(w, e.NewSize.Height);
             Size = new Size(w, e.NewSize.Height);
         }
 
@@ -104,6 +104,11 @@ namespace Demo
         }
 
         private void TextEmoji_CopyTextAction(string obj)
+        {
+
+        }
+
+        private void first_CopyTextAction(string obj)
         {
 
         }

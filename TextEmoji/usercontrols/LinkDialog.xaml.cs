@@ -39,7 +39,7 @@ namespace TextEmoji.usercontrols
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)
         {
-            var brush = Utility.GetSelectionBrushColor("#f2f2f2");
+            var brush = Utility.GetBrushColor("#f2f2f2");
             ((Border)sender).Background = brush;
         }
 

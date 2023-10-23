@@ -28,28 +28,28 @@ namespace TextEmoji
             {
                 case STYLE.HIGHLIGHT:
                     TextDecorations = new TextDecorationCollection();
-                    Pen underlinePen = new Pen(Utility.GetSelectionBrushColor("#0073e6"), 2);
+                    Pen underlinePen = new Pen(Utility.GetBrushColor("#0073e6"), 2);
                     TextDecorations.Add(new TextDecoration(
                         TextDecorationLocation.Underline, 
                         underlinePen, 1, 
                         TextDecorationUnit.FontRecommended, 
                         TextDecorationUnit.FontRecommended));
-                    ForegroundBrush = Utility.GetSelectionBrushColor("#0073e6");
+                    ForegroundBrush = Utility.GetBrushColor("#0073e6");
                     break;
                 case STYLE.SELECTED:
-                    BackgroundBrush = Utility.GetSelectionBrushColor("#b3d9ff");
+                    BackgroundBrush = Utility.GetBrushColor("#b3d9ff");
                     ForegroundBrush = Brushes.Black;
                     break;
                 case STYLE.BOTH:
                     TextDecorations = new TextDecorationCollection();
-                    underlinePen = new Pen(Utility.GetSelectionBrushColor("#0073e6"), 2);
+                    underlinePen = new Pen(Utility.GetBrushColor("#0073e6"), 2);
                     TextDecorations.Add(new TextDecoration(
                         TextDecorationLocation.Underline,
                         underlinePen, 1,
                         TextDecorationUnit.FontRecommended,
                         TextDecorationUnit.FontRecommended));
-                    ForegroundBrush = Utility.GetSelectionBrushColor("#0073e6");
-                    BackgroundBrush = Utility.GetSelectionBrushColor("#66ff0000");
+                    ForegroundBrush = Utility.GetBrushColor("#0073e6");
+                    BackgroundBrush = Utility.GetBrushColor("#66ff0000");
                     break;
                 case STYLE.CLEAR:
                     BackgroundBrush = Brushes.Transparent;

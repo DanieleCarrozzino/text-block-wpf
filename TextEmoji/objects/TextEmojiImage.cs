@@ -36,6 +36,8 @@ namespace TextEmoji.objects
         private CustomTextSource mainTextSource;
         // Emoji matches
         private MatchCollection emojiCollection;
+        // Arabic text matches
+        private List<AMatch> arabicCollection;
 
         // Object dimensions
         private int width_object  = 300;
@@ -127,8 +129,9 @@ namespace TextEmoji.objects
 
         public void Init(string text)
         {
-            emojiCollection = EmojiData.MatchOne.Matches(text);
-            linkMatches     = Utility.CheckValidUrl(text);
+            emojiCollection     = EmojiData.MatchOne.Matches(text);
+            linkMatches         = Utility.CheckValidUrl(text);
+            arabicCollection    = Utility.GetArabicCollection(text);
             HighLightText();
 
             MouseUp += OnMouseUp;
@@ -303,32 +306,56 @@ namespace TextEmoji.objects
                         // Define and draw the line
                         textIntegers.Add(textSourcePosition);
 
-
                         /*****************
                          * Draw selection
                          *****************/
+                        var start_bound = Math.Max(newFirstCharacter.FirstCharacterIndex, textSourcePosition);
+                        var end_bound   = Math.Min(newLastCharacter.FirstCharacterIndex, textSourcePosition + line.Length);
+
+                        if (start_bound != end_bound && end_bound - start_bound > 0)
+                        {
+                            var list = line.GetTextBounds(start_bound, end_bound - start_bound);
+                            foreach (var bound in list)
+                            {
+                                Rect rec = new Rect(bound.Rectangle.X, linePosition.Y, bound.Rectangle.Width, bound.Rectangle.Height);
+
+                                if (newFirstCharacter.FirstCharacterIndex == start_bound)
+                                {
+                                    dc.DrawGeometry(Utility.GetSelectionBrushColor(), null, createGeometryLeftRounded(rec));
+                                }
+                                else if (newLastCharacter.FirstCharacterIndex == end_bound)
+                                {
+                                    dc.DrawGeometry(Utility.GetSelectionBrushColor(), null, createGeometryRightRounded(rec));
+                                }
+                                else
+                                {
+                                    dc.DrawRectangle(Utility.GetSelectionBrushColor(), null, rec);
+                                }
+                            }
+                        }
+
                         // if line contains the start of the selection 
                         // it means textSourcePosition < firstCharacterPosition
                         // and textSourcePosition + line.Length > firstCharacterPosition
-                        if(textSourcePosition <= newFirstCharacter.FirstCharacterIndex 
+                        /*if (textSourcePosition <= newFirstCharacter.FirstCharacterIndex 
                             && textSourcePosition + line.Length > newFirstCharacter.FirstCharacterIndex)
                         {
                             double pointx       = Math.Min(Math.Max(newFirstPoint.X, 0), line.Width);
                             double width_rect   = line.Width - pointx;
 
-                            // if the line conains also the end of selection
+                            // if the line contains also the end of selection
                             if (newLastCharacter.FirstCharacterIndex < textSourcePosition + line.Length)
                             {
                                 double x    = Math.Min(newLastPoint.X, line.Width);
                                 width_rect  = Math.Abs(x - pointx);
 
                                 Rect rec    = new Rect(pointx, linePosition.Y, width_rect, line.Height);
-                                dc.DrawRoundedRectangle(Utility.GetSelectionBrushColor("#b3d9ff"), null, rec, Const.CornerRect, Const.CornerRect);
+                                dc.DrawRoundedRectangle(Utility.GetBrushColor("#b3d9ff"), null, rec, Const.CornerRect, Const.CornerRect);
                             }
                             else
                             {
                                 Rect rec = new Rect(pointx, linePosition.Y, width_rect, line.Height);
-                                dc.DrawGeometry(Utility.GetSelectionBrushColor("#b3d9ff"), null, createGeometryLeftRounded(rec));
+                                dc.DrawGeometry(Utility.GetBrushColor("#b3d9ff"), null, createGeometryLeftRounded(rec));
                             }
                         }
                         // If the line contains the end of the selection
@@ -340,7 +367,7 @@ namespace TextEmoji.objects
                             double pointx = Math.Min(line.Width, newLastPoint.X);
                             
                             Rect rec = new Rect(0, linePosition.Y, pointx, line.Height);
-                            dc.DrawGeometry(Utility.GetSelectionBrushColor("#b3d9ff"), null, createGeometryRightRounded(rec));
+                            dc.DrawGeometry(Utility.GetBrushColor("#b3d9ff"), null, createGeometryRightRounded(rec));
                         }
                         // The selection contains the entire line
                         // it means firstCharacterPosition < textSourcePosition
@@ -349,8 +376,8 @@ namespace TextEmoji.objects
                             && textSourcePosition + line.Length < newLastCharacter.FirstCharacterIndex)
                         {
                             Rect rec = new Rect(0, linePosition.Y, line.Width, line.Height);
-                            dc.DrawRectangle(Utility.GetSelectionBrushColor("#b3d9ff"), null, rec);
-                        }
+                            dc.DrawRectangle(Utility.GetBrushColor("#b3d9ff"), null, rec);
+                        }*/
 
 
                         /************
@@ -371,7 +398,6 @@ namespace TextEmoji.objects
                         // ho la lista delle emoji all'interno di emojiCollection
                         // devo controllare che la linea che sto gestendo non contenga
                         // l'emoji che voglio disegnare
-
                         foreach (Match match in emojiCollection)
                         {
                             if (textSourcePosition - line.Length <= match.Index && textSourcePosition > match.Index)
@@ -402,6 +428,23 @@ namespace TextEmoji.objects
                 }
             }
         }
+
+
+        private bool IsInsideAnArabicText(int position, AMatch match)
+        {
+            return match.Index <= position && match.Index + match.Length >= position;
+        }
+
+        private bool IsNotArabic(int position)
+        {
+            foreach(AMatch match in arabicCollection)
+            {
+                if (match.Index == position) return false;
+                else if (match.Index > position) return true;
+            }
+            return true;
+        }
+
 
         private StreamGeometry createGeometryLeftRounded(Rect rectangleRect)
         {
@@ -609,7 +652,19 @@ namespace TextEmoji.objects
                     length = Math.Abs(length);
                     start = lastCharacter.FirstCharacterIndex;
                 }
-                return mainTextSource.Text.Substring(start, length + 1);
+
+
+                bool add = false;
+                foreach(Match match in emojiCollection)
+                {
+                    if(start + length == match.Index)
+                    {
+                        length += match.Length;
+                        add = true;
+                    }
+                }
+                if (!add) length += 1;
+                return mainTextSource.Text.Substring(start, length);
             }
             return "";
         }
@@ -639,13 +694,16 @@ namespace TextEmoji.objects
         //
         //*******************
 
-        private ScrollViewer parentScrollable = null;
+        private ScrollViewer parentScrollable   = null;
+        private bool IsParentScrollable         = true;
 
         private void ManageMouseMoveOutOfBorder(MouseEventArgs e)
         {
+            if (!IsParentScrollable) return;
             parentScrollable ??= getScrollableParent();
+            if (parentScrollable == null) return;
+            
             var p = e.GetPosition(parentScrollable);
-
             if (p.Y > parentScrollable.ActualHeight || p.Y < 0)
             {
                 up      = p.Y < 0;
@@ -705,12 +763,14 @@ namespace TextEmoji.objects
             {
                 if (parent is ScrollViewer scrollInfo)
                 {
+                    IsParentScrollable = true;
                     return scrollInfo;
                 }
 
                 parent = VisualTreeHelper.GetParent(parent);
             }
 
+            IsParentScrollable = false;
             return null;
         }
 

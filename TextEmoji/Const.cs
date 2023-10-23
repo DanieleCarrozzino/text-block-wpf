@@ -194,5 +194,7 @@ namespace TextEmoji
                     "\\." +
                     "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
                 ")+";
+
+        public static String ARABIC_REGEX = "[\u0600-\u06ff]|[\u0750-\u077f]|[\ufb50-\ufc3f]|[\ufe70-\ufefc]";
     }
 }
