@@ -36,8 +36,6 @@ namespace TextEmoji.objects
         private CustomTextSource mainTextSource;
         // Emoji matches
         private MatchCollection emojiCollection;
-        // Arabic text matches
-        private List<AMatch> arabicCollection;
 
         // Object dimensions
         private int width_object  = 300;
@@ -131,7 +129,6 @@ namespace TextEmoji.objects
         {
             emojiCollection     = EmojiData.MatchOne.Matches(text);
             linkMatches         = Utility.CheckValidUrl(text);
-            arabicCollection    = Utility.GetArabicCollection(text);
             HighLightText();
 
             MouseUp += OnMouseUp;
@@ -333,52 +330,7 @@ namespace TextEmoji.objects
                                 }
                             }
                         }
-
-                        // if line contains the start of the selection 
-                        // it means textSourcePosition < firstCharacterPosition
-                        // and textSourcePosition + line.Length > firstCharacterPosition
-                        /*if (textSourcePosition <= newFirstCharacter.FirstCharacterIndex 
-                            && textSourcePosition + line.Length > newFirstCharacter.FirstCharacterIndex)
-                        {
-                            double pointx       = Math.Min(Math.Max(newFirstPoint.X, 0), line.Width);
-                            double width_rect   = line.Width - pointx;
-
-                            // if the line contains also the end of selection
-                            if (newLastCharacter.FirstCharacterIndex < textSourcePosition + line.Length)
-                            {
-                                double x    = Math.Min(newLastPoint.X, line.Width);
-                                width_rect  = Math.Abs(x - pointx);
-
-                                Rect rec    = new Rect(pointx, linePosition.Y, width_rect, line.Height);
-                                dc.DrawRoundedRectangle(Utility.GetBrushColor("#b3d9ff"), null, rec, Const.CornerRect, Const.CornerRect);
-                            }
-                            else
-                            {
-                                Rect rec = new Rect(pointx, linePosition.Y, width_rect, line.Height);
-                                dc.DrawGeometry(Utility.GetBrushColor("#b3d9ff"), null, createGeometryLeftRounded(rec));
-                            }
-                        }
-                        // If the line contains the end of the selection
-                        // it means lastCharacterPosition > textSourcePosition
-                        // and textSourcePosition + line.Length > lastCharacterPosition
-                        else if (textSourcePosition < newLastCharacter.FirstCharacterIndex
-                            && textSourcePosition + line.Length > newLastCharacter.FirstCharacterIndex)
-                        {
-                            double pointx = Math.Min(line.Width, newLastPoint.X);
-                            
-                            Rect rec = new Rect(0, linePosition.Y, pointx, line.Height);
-                            dc.DrawGeometry(Utility.GetBrushColor("#b3d9ff"), null, createGeometryRightRounded(rec));
-                        }
-                        // The selection contains the entire line
-                        // it means firstCharacterPosition < textSourcePosition
-                        // and lastCharacterPosition > textSourcePosition + line.Length
-                        else if (newFirstCharacter.FirstCharacterIndex < textSourcePosition
-                            && textSourcePosition + line.Length < newLastCharacter.FirstCharacterIndex)
-                        {
-                            Rect rec = new Rect(0, linePosition.Y, line.Width, line.Height);
-                            dc.DrawRectangle(Utility.GetBrushColor("#b3d9ff"), null, rec);
-                        }*/
-
+                        //CustomSelection();
 
                         /************
                          * Draw line
@@ -430,19 +382,55 @@ namespace TextEmoji.objects
         }
 
 
-        private bool IsInsideAnArabicText(int position, AMatch match)
+        /// <summary>
+        /// Old custom selection
+        /// </summary>
+        private void CustomSelection()
         {
-            return match.Index <= position && match.Index + match.Length >= position;
-        }
-
-        private bool IsNotArabic(int position)
-        {
-            foreach(AMatch match in arabicCollection)
+            // if line contains the start of the selection 
+            // it means textSourcePosition < firstCharacterPosition
+            // and textSourcePosition + line.Length > firstCharacterPosition
+            /*if (textSourcePosition <= newFirstCharacter.FirstCharacterIndex 
+                && textSourcePosition + line.Length > newFirstCharacter.FirstCharacterIndex)
             {
-                if (match.Index == position) return false;
-                else if (match.Index > position) return true;
+                double pointx       = Math.Min(Math.Max(newFirstPoint.X, 0), line.Width);
+                double width_rect   = line.Width - pointx;
+
+                // if the line contains also the end of selection
+                if (newLastCharacter.FirstCharacterIndex < textSourcePosition + line.Length)
+                {
+                    double x    = Math.Min(newLastPoint.X, line.Width);
+                    width_rect  = Math.Abs(x - pointx);
+
+                    Rect rec    = new Rect(pointx, linePosition.Y, width_rect, line.Height);
+                    dc.DrawRoundedRectangle(Utility.GetBrushColor("#b3d9ff"), null, rec, Const.CornerRect, Const.CornerRect);
+                }
+                else
+                {
+                    Rect rec = new Rect(pointx, linePosition.Y, width_rect, line.Height);
+                    dc.DrawGeometry(Utility.GetBrushColor("#b3d9ff"), null, createGeometryLeftRounded(rec));
+                }
             }
-            return true;
+            // If the line contains the end of the selection
+            // it means lastCharacterPosition > textSourcePosition
+            // and textSourcePosition + line.Length > lastCharacterPosition
+            else if (textSourcePosition < newLastCharacter.FirstCharacterIndex
+                && textSourcePosition + line.Length > newLastCharacter.FirstCharacterIndex)
+            {
+                double pointx = Math.Min(line.Width, newLastPoint.X);
+
+                Rect rec = new Rect(0, linePosition.Y, pointx, line.Height);
+                dc.DrawGeometry(Utility.GetBrushColor("#b3d9ff"), null, createGeometryRightRounded(rec));
+            }
+            // The selection contains the entire line
+            // it means firstCharacterPosition < textSourcePosition
+            // and lastCharacterPosition > textSourcePosition + line.Length
+            else if (newFirstCharacter.FirstCharacterIndex < textSourcePosition
+                && textSourcePosition + line.Length < newLastCharacter.FirstCharacterIndex)
+            {
+                Rect rec = new Rect(0, linePosition.Y, line.Width, line.Height);
+                dc.DrawRectangle(Utility.GetBrushColor("#b3d9ff"), null, rec);
+            }*/
         }
 
 
@@ -562,7 +550,7 @@ namespace TextEmoji.objects
             base.OnMouseLeftButtonUp(e);
         }
 
-        protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
+        protected override void OnPreviewMouseRightButtonUp(MouseButtonEventArgs e)
         {
 
             // right click on link or text
@@ -587,12 +575,12 @@ namespace TextEmoji.objects
                     }
                 }
             }
-            if (!string.IsNullOrEmpty(GetSelectedText()))
-            {
+            /*if (!string.IsNullOrEmpty(GetSelectedText()))
+            {*/
                 rightMouseClickWithSelectedText(GetSelectedText(), e);
-                e.Handled = true;
-                return;
-            }
+                //e.Handled = true;
+                //return;
+            //}
 
             base.OnMouseRightButtonUp(e);
         }
@@ -667,6 +655,17 @@ namespace TextEmoji.objects
                 return mainTextSource.Text.Substring(start, length);
             }
             return "";
+        }
+
+        public void SelectAll()
+        {
+            firstCharacter  = new CharacterHit(0, 0);
+            lastCharacter   = new CharacterHit(Text.Length - 1, 0);
+
+            newFirstCharacter   = firstCharacter;
+            newLastCharacter    = lastCharacter;
+
+            InvalidateVisual();
         }
 
         //***************

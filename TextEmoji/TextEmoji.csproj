@@ -21,6 +21,7 @@
     <EmbeddedResource Include="Lib\Stfu.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     <Resource Include="resources\copy.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -30,10 +31,6 @@
     <Resource Include="resources\web.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

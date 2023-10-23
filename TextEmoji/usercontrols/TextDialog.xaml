@@ -24,6 +24,7 @@
             <Border
                 CornerRadius="10"
                 Margin="2"
+                Opacity="{Binding opacitySelection}"
                 Background="White"
                 MouseEnter="Border_MouseEnter"
                 MouseLeave="Border_MouseLeave"
@@ -53,6 +54,7 @@
             <Border
                 CornerRadius="10"
                 Margin="2"
+                Opacity="{Binding opacitySelection}"
                 Background="White"
                 MouseEnter="Border_MouseEnter"
                 MouseLeave="Border_MouseLeave"
@@ -85,7 +87,7 @@
                 Background="White"
                 MouseEnter="Border_MouseEnter"
                 MouseLeave="Border_MouseLeave"
-                MouseLeftButtonUp="Border_SearchText">
+                MouseLeftButtonUp="Border_SelectAllText">
 
                 <StackPanel
                     Orientation="Horizontal"

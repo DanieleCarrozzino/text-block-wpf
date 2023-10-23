@@ -49,53 +49,6 @@ namespace TextEmoji
             return null;
         }
 
-        /// <summary>
-        /// Get all valid arabic text 
-        /// from the passing text
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public static List<AMatch> GetArabicCollection(string text)
-        {
-            try
-            {
-                var collection = Regex.Matches(text, Const.ARABIC_REGEX);
-
-                List<AMatch> list = new List<AMatch>();
-
-                Match previous = null;
-                foreach (Match match in collection)
-                {
-                    if (previous == null)
-                    {
-                        list.Add(new AMatch(match.Value, match.Index, match.Length));
-                        previous = match;
-                        continue;
-                    }
-
-                    if(previous.Index + previous.Length == match.Index)
-                    {
-                        var change = list[list.Count - 1];
-                        var value  = new AMatch(change.Value + match.Value, change.Index, change.Length + match.Length);
-                        list[list.Count - 1] = value;
-                    }
-                    else
-                    {
-                        list.Add(new AMatch(match.Value, match.Index, match.Length));
-                    }
-                    previous = match;
-                }
-
-                return list;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
-            }
-            return null;
-        }
-
         public static SolidColorBrush GetBrushColor(string hexColor)
         {
             SolidColorBrush backgroundBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(hexColor));
@@ -114,7 +67,6 @@ namespace TextEmoji
 
         public static void OpenPopupLinkMenu(UIElement element, Point p, UIElement dialogContent)
         {
-            Trace.WriteLine("1");
             popup.Focus();
 
             popup.StaysOpen             = false;
@@ -134,7 +86,6 @@ namespace TextEmoji
             popup.VerticalOffset    = p.Y + 5;
 
             popup.IsOpen = true;
-            Trace.WriteLine("2");
         }
 
         public static void ClosePopup()

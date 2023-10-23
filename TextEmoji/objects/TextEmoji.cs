@@ -18,6 +18,10 @@ namespace TextEmoji.objects
     {
         private Manager manager = Manager.GetInstance();
         private TextEmojiImage image    = null;
+
+        /**********
+         * PUBLIC
+         *********/
         public event Action<string> LinkClicked;
         public event Action<string, MouseButtonEventArgs> RightLinkClicked;
         public event Action<string, MouseButtonEventArgs> RightTextSelectedClicked;
@@ -26,6 +30,11 @@ namespace TextEmoji.objects
         public event Action<string> CopyTextAction;
         public event Action<string> CopyLinkAction;
         public event Action<string> OpenLinkAction;
+
+        /***********
+         * PRIVATE
+         **********/
+        private event Action<object> SelectAllAction;
 
         public TextEmoji()
         {
@@ -169,8 +178,19 @@ namespace TextEmoji.objects
         public void rightMouseClickWithTextSelected(string selectedText, MouseButtonEventArgs e)
         {
             RightTextSelectedClicked?.Invoke(selectedText, e);
-            var dialog = new TextDialog(CopyLinkAction, OpenLinkAction, selectedText);
+            SelectAllAction += TextEmoji_SelectAllAction;
+            var dialog = new TextDialog(CopyTextAction, OpenLinkAction, SelectAllAction, selectedText);
             Utility.OpenPopupLinkMenu(this, e.GetPosition(this), dialog);
+        }
+
+        /// <summary>
+        /// Select All catch result
+        /// </summary>
+        /// <param name="obj"></param>
+        private void TextEmoji_SelectAllAction(object obj)
+        {
+            SelectAllAction -= TextEmoji_SelectAllAction;
+            if (image != null) image.SelectAll();
         }
 
         /// <summary>
