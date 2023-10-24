@@ -365,7 +365,7 @@ namespace TextEmoji.objects
                                 {
                                     dc.DrawGeometry(Utility.GetSelectionBrushColor(), null, createGeometryLeftRounded(rec));
                                 }
-                                else if (newLastCharacter.FirstCharacterIndex == end_bound)
+                                else if (newLastCharacter.FirstCharacterIndex == end_bound - 1)
                                 {
                                     dc.DrawGeometry(Utility.GetSelectionBrushColor(), null, createGeometryRightRounded(rec));
                                 }
