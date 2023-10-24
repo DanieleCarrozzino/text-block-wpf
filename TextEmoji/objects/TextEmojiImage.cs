@@ -68,6 +68,9 @@ namespace TextEmoji.objects
         // Highlight text
         private AMatch highlightMatch = new AMatch("", -1, -1);
 
+        // Manager (to manage cache and inter connections)
+        Manager manager = Manager.GetInstance();
+
         //------------
         //
         // ACTION
@@ -402,10 +405,18 @@ namespace TextEmoji.objects
                                 double width_o = LineHeight() + 6;
                                 double height_o = LineHeight() + 6;
 
-                                var di = new DrawingImage(Emoji.Wpf.Image.RenderEmoji(match.Value, out width_o, out height_o));
-                                di.Freeze();
+                                DrawingImage drawingImage;
+                                if (!manager.cacheEmoji.ContainsKey(match.Value + LineHeight()))
+                                {
+                                    drawingImage = new DrawingImage(Emoji.Wpf.Image.RenderEmoji(match.Value, out width_o, out height_o));
+                                    drawingImage.Freeze();
+                                    manager.cacheEmoji.Add(match.Value + LineHeight(), drawingImage);
+                                }
+                                else
+                                    drawingImage = manager.cacheEmoji[match.Value + LineHeight()];
+
                                 Rect imageRect = new Rect(point, new Size(LineHeight() + 6, LineHeight() + 6));
-                                dc.DrawImage(di, imageRect);
+                                dc.DrawImage(drawingImage, imageRect);
                             }
                         }
                     }

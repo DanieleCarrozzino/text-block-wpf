@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using TextEmoji.@interface;
 using TextEmoji.objects;
 
@@ -21,12 +22,15 @@ namespace TextEmoji
             return instance;
         }
 
+        // Last text emoji to call to clean
         private ITextEmoji lastTextEmoji = null;
+
+        // Cache Emoji
+        public Dictionary<string, DrawingImage> cacheEmoji = new Dictionary<string, DrawingImage>();
 
 
         public Manager()
         {
-            initLibrary(); 
         }
 
         public void saveLastTextEmojiModifiedAndCleanThePreviousOne(ITextEmoji textEmoji)
@@ -45,22 +49,5 @@ namespace TextEmoji
         {
             if(lastTextEmoji != null) lastTextEmoji.CleanImage();
         }
-
-        private void initLibrary()
-        {
-            /*try
-            {
-                string exePath = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-                string dllPath = Path.Combine(exePath, "Lib", "Emoji.Wpf2.dll");
-                if (File.Exists(dllPath))
-                {
-                    Assembly assembly = Assembly.LoadFrom(dllPath);
-                }
-            }
-            catch (Exception ex)
-            {
-            }*/
-        }
-
     }
 }
