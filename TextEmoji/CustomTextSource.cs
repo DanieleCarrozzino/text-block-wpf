@@ -45,13 +45,14 @@ namespace TextEmoji
         {
             // Clear link list
             this.fontsize       = fontsize;
-            positionCustomStyle = list.ToHashSet();
+            positionCustomStyle = list.OrderBy(item => item.Item1).ToHashSet();
             Text                = text;
         }
 
         public void AddHighlight(AMatch match)
         {
             positionCustomStyle.Add((match.Index, match.Length, (int)TYPE.HIGHLIGHT));
+            positionCustomStyle = positionCustomStyle.OrderBy(item => item.Item1).ToHashSet();
         }
 
         public void RemoveHighlight()
