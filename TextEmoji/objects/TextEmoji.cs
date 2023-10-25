@@ -184,7 +184,7 @@ namespace TextEmoji.objects
         public void rightLinkClicked(string link, MouseButtonEventArgs e)
         {
             RightLinkClicked?.Invoke(link, e);
-            var dialog = new LinkDialog(CopyLinkAction, OpenLinkAction, link);
+            var dialog = new TextDialog(CopyLinkAction, OpenLinkAction, link);
             Utility.OpenPopupLinkMenu(this, e.GetPosition(this), dialog);
         }
 
@@ -197,6 +197,18 @@ namespace TextEmoji.objects
             RightTextSelectedClicked?.Invoke(selectedText, e);
             SelectAllAction += TextEmoji_SelectAllAction;
             var dialog = new TextDialog(CopyTextAction, OpenLinkAction, SelectAllAction, selectedText);
+            Utility.OpenPopupLinkMenu(this, e.GetPosition(this), dialog);
+        }
+
+        /// <summary>
+        /// Right mouse event click on a selected text
+        /// </summary>
+        /// <param name="selectedText"></param>
+        public void rightMouseClickWithTextSelectedAndLink(string selectedText, string link, MouseButtonEventArgs e)
+        {
+            RightTextSelectedClicked?.Invoke(selectedText, e);
+            SelectAllAction += TextEmoji_SelectAllAction;
+            var dialog = new TextDialog(CopyTextAction, OpenLinkAction, SelectAllAction, OpenLinkAction, selectedText, link);
             Utility.OpenPopupLinkMenu(this, e.GetPosition(this), dialog);
         }
 

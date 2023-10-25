@@ -236,6 +236,18 @@ namespace TextEmoji.objects
             else RightTextSelectedClicked?.Invoke(selectedText, e);
         }
 
+        /// <summary>
+        /// both
+        /// </summary>
+        /// <param name="selectedText"></param>
+        /// <param name="start"></param>
+        /// <param name="length"></param>
+        /// <param name="e"></param>
+        private void rightMouseClickWithSelectedTextAndLink(string selectedText, int start, int length, MouseButtonEventArgs e)
+        {
+            if (parent != null) parent.rightMouseClickWithTextSelectedAndLink(selectedText, mainTextSource.Text.Substring(start, length), e);
+        }
+
         private void selectedChanged(string text)
         {
             if (parent != null) parent.Selected(text);
@@ -615,6 +627,7 @@ namespace TextEmoji.objects
             Point           point;
             (character, point) = GetCharacterFromPoint(p);
 
+            Match matchLink = null;
             if (linkMatches != null)
             {
                 foreach (Match match in linkMatches)
@@ -622,20 +635,26 @@ namespace TextEmoji.objects
                     if (character.FirstCharacterIndex >= match.Index &&
                         character.FirstCharacterIndex <= match.Index + match.Length)
                     {
-                        rightclickLink(match.Index, match.Length, e);
-                        e.Handled = true;
-                        return;
+                        matchLink = match;
                     }
                 }
             }
-            /*if (!string.IsNullOrEmpty(GetSelectedText()))
-            {*/
-                rightMouseClickWithSelectedText(GetSelectedText(), e);
-                //e.Handled = true;
-                //return;
-            //}
 
-            base.OnMouseRightButtonUp(e);
+            var text = GetSelectedText();
+            if (matchLink != null && string.IsNullOrEmpty(text))
+            {
+                rightclickLink(matchLink.Index, matchLink.Length, e);
+            }
+            else if (matchLink != null && !string.IsNullOrEmpty(text))
+            {
+                rightMouseClickWithSelectedTextAndLink(text, matchLink.Index, matchLink.Length, e);
+            }
+            else
+            {
+                rightMouseClickWithSelectedText(text, e);
+            }
+
+            e.Handled = true;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)

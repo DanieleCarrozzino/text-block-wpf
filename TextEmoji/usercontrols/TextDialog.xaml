@@ -21,90 +21,159 @@
                 Margin="1"
                 Orientation="Vertical">
 
-            <Border
-                CornerRadius="10"
-                Margin="2"
-                Opacity="{Binding opacitySelection}"
-                Background="White"
-                MouseEnter="Border_MouseEnter"
-                MouseLeave="Border_MouseLeave"
-                MouseLeftButtonUp="Border_CopyText">
+            <StackPanel 
+                Name="link"
+                Orientation="Vertical">
+            
+                <Border
+                    CornerRadius="10"
+                    Margin="2"
+                    Background="White"
+                    MouseEnter="Border_MouseEnter"
+                    MouseLeave="Border_MouseLeave"
+                    MouseLeftButtonUp="Border_CopyLink">
 
-                <StackPanel
-                    Orientation="Horizontal"
-                    Margin="10">
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Margin="10">
 
-                    <Image 
-                        Width="20" 
-                        Height="20" 
-                        Source="pack://application:,,,/TextEmoji;component/resources/copy.png" />
-                    <TextBlock 
-                        Text="Copy text"
-                        FontSize="15"
-                        Margin="10, 0, 5, 0"/>
+                        <Image 
+                            Width="20" 
+                            Height="20" 
+                            Source="pack://application:,,,/TextEmoji;component/resources/copy.png" />
+                        <TextBlock 
+                            Text="Copy link"
+                            FontSize="15"
+                            Margin="10, 0, 5, 0"/>
 
-                </StackPanel>
+                    </StackPanel>
 
-            </Border>
+                </Border>
 
-            <Separator 
-                Background="LightGray"
-                Height="4" Margin="10, 0, 10, 0"/>
+                <Separator 
+                    Background="LightGray"
+                    Height="4" Margin="10, 0, 10, 0"/>
 
-            <Border
-                CornerRadius="10"
-                Margin="2"
-                Opacity="{Binding opacitySelection}"
-                Background="White"
-                MouseEnter="Border_MouseEnter"
-                MouseLeave="Border_MouseLeave"
-                MouseLeftButtonUp="Border_SearchText">
+                <Border
+                    CornerRadius="10"
+                    Margin="2"
+                    Background="White"
+                    MouseEnter="Border_MouseEnter"
+                    MouseLeave="Border_MouseLeave"
+                    MouseLeftButtonUp="Border_OpenLink">
 
-                <StackPanel
-                    Orientation="Horizontal"
-                    Margin="10">
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Margin="10">
 
-                    <Image 
-                        Width="20" 
-                        Height="20" 
-                        Source="pack://application:,,,/TextEmoji;component/resources/web.png"/>
-                    <TextBlock 
-                        Text="Search on web"
-                        FontSize="15"
-                        Margin="10, 0, 5, 0"/>
+                        <Image 
+                            Width="20" 
+                            Height="20" 
+                            Source="pack://application:,,,/TextEmoji;component/resources/web.png" />
+                        <TextBlock 
+                            Text="Open link"
+                            FontSize="15"
+                            Margin="10, 0, 5, 0"/>
 
-                </StackPanel>
+                    </StackPanel>
 
-            </Border>
+                </Border>
 
-            <Separator 
-                Background="LightGray"
-                Height="4" Margin="10, 0, 10, 0"/>
+                <Separator 
+                    Background="LightGray"
+                    Height="4" Margin="10, 0, 10, 0"/>
 
-            <Border
-                CornerRadius="10"
-                Margin="2"
-                Background="White"
-                MouseEnter="Border_MouseEnter"
-                MouseLeave="Border_MouseLeave"
-                MouseLeftButtonUp="Border_SelectAllText">
+            </StackPanel>
 
-                <StackPanel
-                    Orientation="Horizontal"
-                    Margin="10">
+            <StackPanel
+                Name="text">
+            
+                <Border
+                    CornerRadius="10"
+                    Margin="2"
+                    Opacity="{Binding opacitySelection}"
+                    Background="White"
+                    MouseEnter="Border_MouseEnter"
+                    MouseLeave="Border_MouseLeave"
+                    MouseLeftButtonUp="Border_CopyText">
 
-                    <Image 
-                        Width="20" 
-                        Height="20"  
-                        Source="pack://application:,,,/TextEmoji;component/resources/copy_all.png"/>
-                    <TextBlock 
-                        Text="Select all"
-                        FontSize="15"
-                        Margin="10, 0, 5, 0"/>
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Margin="10">
 
-                </StackPanel>
+                        <Image 
+                            Width="20" 
+                            Height="20" 
+                            Source="pack://application:,,,/TextEmoji;component/resources/copy.png" />
+                        <TextBlock 
+                            Text="Copy text"
+                            FontSize="15"
+                            Margin="10, 0, 5, 0"/>
 
-            </Border>
+                    </StackPanel>
+
+                </Border>
+
+                <Separator 
+                    Background="LightGray"
+                    Height="4" Margin="10, 0, 10, 0"/>
+
+                <Border
+                    CornerRadius="10"
+                    Margin="2"
+                    Opacity="{Binding opacitySelection}"
+                    Background="White"
+                    MouseEnter="Border_MouseEnter"
+                    MouseLeave="Border_MouseLeave"
+                    MouseLeftButtonUp="Border_SearchText">
+
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Margin="10">
+
+                        <Image 
+                            Width="20" 
+                            Height="20" 
+                            Source="pack://application:,,,/TextEmoji;component/resources/web.png"/>
+                        <TextBlock 
+                            Text="Search on web"
+                            FontSize="15"
+                            Margin="10, 0, 5, 0"/>
+
+                    </StackPanel>
+
+                </Border>
+
+                <Separator 
+                    Background="LightGray"
+                    Height="4" Margin="10, 0, 10, 0"/>
+
+                <Border
+                    CornerRadius="10"
+                    Margin="2"
+                    Background="White"
+                    MouseEnter="Border_MouseEnter"
+                    MouseLeave="Border_MouseLeave"
+                    MouseLeftButtonUp="Border_SelectAllText">
+
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Margin="10">
+
+                        <Image 
+                            Width="20" 
+                            Height="20"  
+                            Source="pack://application:,,,/TextEmoji;component/resources/copy_all.png"/>
+                        <TextBlock 
+                            Text="Select all"
+                            FontSize="15"
+                            Margin="10, 0, 5, 0"/>
+
+                    </StackPanel>
+
+                </Border>
+
+            </StackPanel>
 
         </StackPanel>
 

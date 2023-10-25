@@ -25,7 +25,6 @@ namespace TextEmoji.@interface
         /// mouse button
         /// </summary>
         /// <param name="link"></param>
-        /// <param name="coordinate"></param>
         public void rightLinkClicked(string link, MouseButtonEventArgs e);
 
         /// <summary>
@@ -33,8 +32,14 @@ namespace TextEmoji.@interface
         /// a selected text is been clicked
         /// </summary>
         /// <param name="selectedText"></param>
-        /// <param name="coordinate"></param>
         public void rightMouseClickWithTextSelected(string selectedText, MouseButtonEventArgs e);
+
+        /// <summary>
+        /// link and text togheter
+        /// </summary>
+        /// <param name="selectedText"></param>
+        /// <param name="link"></param>
+        public void rightMouseClickWithTextSelectedAndLink(string selectedText, string link, MouseButtonEventArgs e);
 
         /// <summary>
         /// Resize container 
