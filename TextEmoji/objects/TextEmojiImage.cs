@@ -640,16 +640,32 @@ namespace TextEmoji.objects
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (!startSelected) return;
-
-            ManageMouseMoveOutOfBorder(e);
-
             // Get mouse position
             Point p = Mouse.GetPosition(this);
 
             // Get the first Character info
-            (lastCharacter, lastPoint) = GetCharacterFromPoint(p);
-            //lastPoint = p;
+            (var character, var point) = GetCharacterFromPoint(p);
+
+            // If is over a link change the cursor
+            bool matchLink = false;
+            foreach(Match match in linkMatches)
+            {
+                if (character.FirstCharacterIndex < match.Index + match.Length 
+                    && character.FirstCharacterIndex >= match.Index)
+                {
+                    matchLink   = true;
+                    if(Cursor != Cursors.Hand)
+                        this.Cursor = Cursors.Hand;
+                    break;
+                }
+            }
+            if (!matchLink && this.Cursor != Cursors.IBeam) this.Cursor = Cursors.IBeam;
+
+
+            if (!startSelected) return;
+
+            ManageMouseMoveOutOfBorder(e);
+            (lastCharacter, lastPoint) = (character, point);
 
             // draw
             drawHighlightTextFromFirstCharacterToTheLastOne();
