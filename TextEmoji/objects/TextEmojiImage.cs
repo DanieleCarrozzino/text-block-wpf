@@ -649,10 +649,11 @@ namespace TextEmoji.objects
             {
                 rightMouseClickWithSelectedTextAndLink(text, matchLink.Index, matchLink.Length, e);
             }
-            else
+            else if (!string.IsNullOrEmpty(text))
             {
                 rightMouseClickWithSelectedText(text, e);
             }
+            else return;
 
             e.Handled = true;
         }
