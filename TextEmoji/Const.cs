@@ -171,8 +171,8 @@ namespace TextEmoji
         private static String PORT_NUMBER = "\\:\\d{1,5}";
 
         private static String PATH_AND_QUERY = "[/\\?](?:(?:[" + LABEL_CHAR
-            + ";/\\?:@&=#~"  // plus optional query params
-            + "\\-\\.\\+!\\*'\\(\\),_\\$])|(?:%[a-fA-F0-9]{2}))*";
+            + ";/\\?:@&=#~\\|"  // plus optional query params
+            + "\\-\\.\\+!\\*'\\(\\),\\|_\\$])|(?:%[a-fA-F0-9]{2}))*";
 
         private static String WORD_BOUNDARY = "(?:\\b|$|^)";
 
