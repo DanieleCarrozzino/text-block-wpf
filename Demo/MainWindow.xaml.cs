@@ -24,31 +24,19 @@ namespace Demo
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
 
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public void OnPropertyChangedName(string name) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
         public MainWindow()
         {
             DataContext = this;
             InitializeComponent();
-
-            /*var l = new List<String>();
-            l.Add("");
-            l.Add("dani🥗dani🤎dani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw ");
-            l.Add("dani🥗dani🤎dani🎶dani");
-            l.Add("kwhfjeb wehbg kjb 🎶evfkjewb vkj");
-            l.Add("dani🥗dani🤎dani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw dani\U0001f957dani\U0001f90edani🎶dani 2k hwe hliw helkj hwklej vkljew vlkjw ");
-            l.Add("dani🥗dani🤎dani🎶dani");
-            l.Add("kwhfjeb wehbg kjb 🎶evfkjewb vkj");
-            l.Add("dani🥗dani🤎dani🎶dani");
-            l.Add("kwhfjeb wehbg kjb 🎶evfkjewb vkj");
-
-            list.ItemsSource = l;*/
         }
 
         public string text
         {
-            get
-            {
-                return "ahjs bkjas|b dvkjb sd|kjbvh https://it.farnell.com/digilent/410-249/prog-cable-jtag-for-xilinx-fpga/dp/2211775?CMP=KNC-GIT-GEN-KWL-No-Audience-19-Mar-21-Shared-Budgets&mckv=_dc|pcrid||671087825487|&gclid=Cj0KCQiAgK2qBhCHARIsAGACuznA5iRArM0fCaxJiPyvVFIDAdgXZ-CrYSO9XVYznQrJKTSXsXHhciMaAh5vEALw_wcB kbsd kvj dskjfv kjdhbfvljhw dljvhbdlskjv";
-            }
+            get => "Hello there! I'm a simple text lorem ipsum 🩷💻💀 and also a link http://www.google.it a link, yeah";
         }
 
         private void TextEmoji_LinkClicked(string link)
@@ -68,11 +56,7 @@ namespace Demo
 
         private void TextEmoji_RightLinkClicked(string obj, MouseButtonEventArgs e)
         {
-            /*Point p = e.GetPosition(this);
-            var userControl = new LinkDialog();
-            userControl.Margin = new Thickness(p.X, p.Y, 0, 0);
 
-            mainGrid.Children.Add(userControl);*/
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -82,24 +66,16 @@ namespace Demo
             Size = new Size(w, e.NewSize.Height);
         }
 
-        public void OnPropertyChangedName(string name) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        
 
         private Size _size = new Size(300, 0);
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
         public Size Size
         {
-            get
-            {
-                return _size;
-            }
+            get => _size;
             set
             {
                 _size = value;
                 OnPropertyChangedName("Size");
-
             }
         }
 
