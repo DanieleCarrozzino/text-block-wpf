@@ -601,7 +601,7 @@ namespace TextEmoji.objects
                 CleanImage();
             }
             // Draw single highlight
-            else
+            else if(firstCharacter.FirstCharacterIndex >= 0)
             {
                 // to receive copy keyboard command
                 Keyboard.Focus(this);
@@ -610,6 +610,10 @@ namespace TextEmoji.objects
                 var indexes     = drawHighlightTextFromFirstCharacterToTheLastOne();
                 selectedText    = mainTextSource.Text.Substring(indexes.Item1, indexes.Item2 + 1);
                 selectedChanged(selectedText);
+            }
+            else
+            {
+                CleanImage();
             }
 
             base.OnMouseLeftButtonUp(e);
