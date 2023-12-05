@@ -60,6 +60,7 @@ namespace TextEmoji.objects
             if (String.IsNullOrEmpty(text))
             {
                 removeReference();
+                return;
             }
 
             GetTextEmojiImage().Text = text;

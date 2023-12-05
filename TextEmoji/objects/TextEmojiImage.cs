@@ -786,6 +786,8 @@ namespace TextEmoji.objects
             RightLinkClicked = null;
             RightTextSelectedClicked = null;
             SelectedChanged = null;
+            parent = null;
+            manager = null;
         }
 
 
