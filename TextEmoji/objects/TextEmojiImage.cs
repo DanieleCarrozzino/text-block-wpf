@@ -788,6 +788,9 @@ namespace TextEmoji.objects
             SelectedChanged = null;
             parent = null;
             manager = null;
+
+            MouseUp -= OnMouseUp;
+            KeyDown -= OnKeyDown;
         }
 
 
