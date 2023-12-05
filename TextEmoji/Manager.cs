@@ -23,7 +23,7 @@ namespace TextEmoji
         }
 
         // Last text emoji to call to clean
-        private ITextEmoji lastTextEmoji = null;
+        public ITextEmoji lastTextEmoji = null;
 
         // Cache Emoji
         public Dictionary<string, DrawingImage> cacheEmoji = new Dictionary<string, DrawingImage>();
