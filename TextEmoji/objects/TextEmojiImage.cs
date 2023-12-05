@@ -776,7 +776,16 @@ namespace TextEmoji.objects
 
             firstCharacter  = new CharacterHit(-1, 0);
             lastCharacter   = new CharacterHit(-1, 0);
+
             InvalidateVisual();
+        }
+
+        public void removeReference()
+        {
+            LinkClicked = null;
+            RightLinkClicked = null;
+            RightTextSelectedClicked = null;
+            SelectedChanged = null;
         }
 
 

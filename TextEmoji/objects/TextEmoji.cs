@@ -57,6 +57,11 @@ namespace TextEmoji.objects
 
         private void OnTextPropertyChanged(string text)
         {
+            if (String.IsNullOrEmpty(text))
+            {
+                removeReference();
+            }
+
             GetTextEmojiImage().Text = text;
         }
 
@@ -241,6 +246,22 @@ namespace TextEmoji.objects
         public void CopyText(string text)
         {
             CopyTextAction?.Invoke(text);
+        }
+
+        private void removeReference()
+        {
+            LinkClicked = null;
+            RightLinkClicked = null;
+            RightTextSelectedClicked = null;
+            SizeChildrenChanged = null;
+            SelectedChanged = null;
+            CopyTextAction = null;
+            CopyLinkAction = null;
+            OpenLinkAction = null;
+            SelectAllAction = null;
+
+            image.removeReference();
+            image = null;
         }
     }
 }
