@@ -168,7 +168,7 @@ namespace TextEmoji.objects
             HighLightText();
 
             MouseUp += OnMouseUp;
-            EventManager.RegisterClassHandler(typeof(Window), Keyboard.KeyDownEvent, new KeyEventHandler(OnKeyDown), true);
+            KeyDown += OnKeyDown;
         }
 
         public double LineHeight() { return fontsize * 1.33; }
