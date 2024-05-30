@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using TextEmoji.@interface;
 using TextEmoji.usercontrols;
 using static System.Net.Mime.MediaTypeNames;
@@ -17,7 +18,7 @@ namespace TextEmoji.objects
     public class TextEmoji : Grid, ITextEmoji
     {
         private Manager manager = Manager.GetInstance();
-        private TextEmojiImage image    = null;
+        private TextEmojiImage image = null;
 
         /**********
          * PUBLIC
@@ -25,7 +26,7 @@ namespace TextEmoji.objects
         public event Action<string> LinkClicked;
         public event Action<string, MouseButtonEventArgs> RightLinkClicked;
         public event Action<string, MouseButtonEventArgs> RightTextSelectedClicked;
-        public event Action<Size>   SizeChildrenChanged;
+        public event Action<Size> SizeChildrenChanged;
         public event Action<string> SelectedChanged;
         public event Action<string> CopyTextAction;
         public event Action<string> CopyLinkAction;
@@ -41,6 +42,7 @@ namespace TextEmoji.objects
             //SetValue(FontSizeProperty, (int)Const.FontSize);
             HorizontalAlignment = HorizontalAlignment.Stretch;
             Children.Add(GetTextEmojiImage());
+            Background = new SolidColorBrush(Colors.Transparent);
         }
 
         // Text to draw
@@ -119,6 +121,11 @@ namespace TextEmoji.objects
         {
             if (image == null) image = new TextEmojiImage(this);
             return image;
+        }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            image.OnMouseLeftButtonDownEvent(this, e);
         }
 
         //***************

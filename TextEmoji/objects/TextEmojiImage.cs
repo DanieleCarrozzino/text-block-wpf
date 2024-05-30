@@ -550,7 +550,7 @@ namespace TextEmoji.objects
             return roundedRectangleGeometry;
         }
 
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        public void OnMouseLeftButtonDownEvent(object sender, MouseButtonEventArgs e)
         {
             // Start selection mode
             startSelected = true;
@@ -566,7 +566,7 @@ namespace TextEmoji.objects
                 parent.CleanLastImage();
 
             // Get the first Character info
-            (firstCharacter, firstPoint)  = GetCharacterFromPoint(p);
+            (firstCharacter, firstPoint) = GetCharacterFromPoint(p);
 
             // To capture the mouse
             e.Handled = true;
